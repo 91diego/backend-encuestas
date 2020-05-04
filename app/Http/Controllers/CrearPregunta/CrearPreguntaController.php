@@ -5,6 +5,8 @@ namespace App\Http\Controllers\CrearPregunta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Preguntas;
+
 class CrearPreguntaController extends Controller
 {
     /**
@@ -14,7 +16,7 @@ class CrearPreguntaController extends Controller
      */
     public function index()
     {
-        //
+        return 'Método index';
     }
 
     /**
@@ -35,7 +37,17 @@ class CrearPreguntaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // SE CREA UNA INSTANCIA DEL MODELO
+        $crearPregunta = new Preguntas; # Crear nuevo modelo
+        
+        // SE GUARDAN LOS DATOS DEL REQUEST EN SUS RESPECTIVOS CAMPOS
+        $crearPregunta->numero = $request->numero;
+        $crearPregunta->descripcion = $request->descripcion;
+        $crearPregunta->multiple = $request->multiple;
+        $crearPregunta->encuesta_id = $request->encuesta_id;
+
+        // GUARDAMOS EN LA BASE DE DATOS
+        $crearPregunta->save();
     }
 
     /**
