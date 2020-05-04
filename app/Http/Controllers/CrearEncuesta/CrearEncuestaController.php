@@ -16,7 +16,8 @@ class CrearEncuestaController extends Controller
      */
     public function index()
     {
-        return "Funciona mi API";
+        $encuestas = Encuestas::get();
+        return $encuestas;
     }
 
     /**
@@ -41,7 +42,7 @@ class CrearEncuestaController extends Controller
         $crearEncuesta = new Encuestas; # Crear nuevo modelo
         
         // SE GUARDAN LOS DATOS DEL REQUEST EN SUS RESPECTIVOS CAMPOS
-        $crearEncuesta->nombre = $request->nombre;
+        $crearEncuesta->nombre = $request->encuesta;
         $crearEncuesta->desarrollo = $request->desarrollo;
         $crearEncuesta->fase = $request->fase;
 

@@ -37,12 +37,24 @@ class CrearPreguntaController extends Controller
      */
     public function store(Request $request)
     {
+
         // SE CREA UNA INSTANCIA DEL MODELO
-        $crearPregunta = new Preguntas; # Crear nuevo modelo
-        
+        $crearPregunta = new Preguntas;
+        // RETORNA LOS REGISTRO DADA LA CONDICION
+        $pregunta = Preguntas::where('encuesta_id', $request->encuesta_id)->get()->last();
+
+        // SI NO EXISTEN REGISTROS, SE ASIGNA 1 EN EL NUMERO DE PREGUNTA
+        // SI EXISTEN REGISTROS, SE TOMA EL NUMERO DE LA PREGUNTA GUARDADO Y SE LE SUMA 1
+        if (!$pregunta) {
+            
+            $crearPregunta->numero = 1;
+        } else {
+
+            $crearPregunta->numero = $pregunta["numero"] + 1;
+        }
+
         // SE GUARDAN LOS DATOS DEL REQUEST EN SUS RESPECTIVOS CAMPOS
-        $crearPregunta->numero = $request->numero;
-        $crearPregunta->descripcion = $request->descripcion;
+        $crearPregunta->descripcion = $request->pregunta;
         $crearPregunta->multiple = $request->multiple;
         $crearPregunta->encuesta_id = $request->encuesta_id;
 
@@ -58,7 +70,8 @@ class CrearPreguntaController extends Controller
      */
     public function show($id)
     {
-        //
+        $pregunta = Preguntas::where('encuesta_id', $id)->get();
+        return $pregunta;
     }
 
     /**
