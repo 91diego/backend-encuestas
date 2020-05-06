@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// SE CREA RUTA PARA MOSTRAR LA VISTA DE LA ENCUESTA
+Route::get('encuesta/{nombre}/{fase}/{id}', 'Encuesta\Encuesta@encuesta');
