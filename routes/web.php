@@ -18,4 +18,4 @@ Route::get('/', function () {
 });
 
 // SE CREA RUTA PARA MOSTRAR LA VISTA DE LA ENCUESTA
-Route::get('encuesta/{nombre}/{fase}/{id}', 'Encuesta\Encuesta@encuesta');
+Route::get('encuesta/{nombre}/{fase}/{id}', 'Encuesta\EncuestaController@encuesta');
