@@ -5,6 +5,10 @@ namespace App\Http\Controllers\GuardarRespuesta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Negociaciones;
+use App\Respuestas;
+use DB;
+
 class GuardarRespuestaController extends Controller
 {
 
@@ -159,9 +163,14 @@ class GuardarRespuestaController extends Controller
      */
     public function store(Request $request)
     {   
-        dd($request->all());
+        // INSTANCIA DE LOS MODELOS
+        $negociaciones = new Negociaciones;
+        $respuestas = new Respuestas;
+
         // ALMACENA LOS DATOS QUE SE PASARAN A LA VISTA
         $data = [];
+
+        $id = $request->id_negociacion;
         
         // INFORMACION DEL DEAL
         // OBTIENE LA INFORMACION DE LA NEGOCIACION
@@ -199,17 +208,78 @@ class GuardarRespuestaController extends Controller
         // dd($place);
 
         array_push($data, [
-            "negociacion" => $deal["result"]["TITLE"],
-            "desarrollo" => $place,
-            "responsable" => $user[0]["NAME"]." ".$user[0]["LAST_NAME"],
-            "puesto" => $user[0]["WORK_POSITION"],
-            "departamento" => $departament[0]["NAME"],
-            "gerente_responsable" => $manager[0]["NAME"]." ".$manager[0]["LAST_NAME"],
-            "origen" => $source[0]["NAME"],
-            "canal_ventas" => $purchase["NAME"],
+            "negociacion" => strtoupper($deal["result"]["TITLE"]),
+            "desarrollo" => strtoupper($place),
+            "responsable" => strtoupper($user[0]["NAME"]." ".$user[0]["LAST_NAME"]),
+            "puesto" => strtoupper($user[0]["WORK_POSITION"]),
+            "departamento" => strtoupper($departament[0]["NAME"]),
+            "gerente_responsable" => strtoupper($manager[0]["NAME"]." ".$manager[0]["LAST_NAME"]),
+            "origen" => \strtoupper($source[0]["NAME"]),
+            "canal_ventas" =>  strtoupper($purchase["NAME"]),
         ]);
 
-        return $data;
+        // CONSULTA PARA VALIDAR SI EL REGISTRO EXISTE
+        $validarNegociacion = Negociaciones::where('id_negociacion', '=', $id)
+        ->exists();
+
+        if ($validarNegociacion) {
+            
+            // SI EXISTE EL REGISTRO, SE HACE LA CONSULTA Y SE DEVUELVE EL ID DEL REGISTRO
+            $validarNegociacion = Negociaciones::where('id_negociacion', $id)
+            ->first();
+            $idNegociacion = $validarNegociacion->id;
+        } else {
+
+            // SI LA NEGOCIACION NO EXISTE, SE INSERTA A LA BASE DE DATOS
+            // SE GUARDAN LOS DATOS EN SUS RESPECTIVOS CAMPOS
+            $negociaciones->id_negociacion = $id;
+            $negociaciones->desarrollo = $data[0]["negociacion"];
+            $negociaciones->responsable = $data[0]["responsable"];
+            $negociaciones->puesto_responsable = $data[0]["puesto"];
+            $negociaciones->departamento_responsable = $data[0]["departamento"];
+            $negociaciones->gerente_responsable = $data[0]["gerente_responsable"];
+            $negociaciones->origen = $data[0]["origen"];
+            $negociaciones->canal_ventas = $data[0]["canal_ventas"];
+
+            // GUARDAMOS EN LA BASE DE DATOS
+            $negociaciones->save();
+
+            // OBTENEMOS EL ID DE LA NEGOCIACION GENERADO EN LA BASE DE DATOS
+            $idNegociacion = $negociaciones->id;
+        }
+
+        $pregunta_id = 0;
+        // SE ITERA EL REQUEST PARA GUARDAR LAS PREGUNTAS
+        foreach($request->all() as $key => $value) {
+
+            $id = strstr($key, 'id');
+
+            // SI EL INDICE ES IGUAL A ID Y DISTINTO A ID_NEGOCIACION
+            // SE GUARDA EL VALOR DEL ID DE LA PREGUNTA
+            if ($key == $id && $key != 'id_negociacion') {
+                
+                $pregunta_id = $value;
+            }
+
+            if ($key != '_token' && $key != 'id_negociacion' && $key != $id) {
+
+                // CONSULTA PARA VALIDAR SI EL REGISTRO EXISTE
+                $validarRespuesta = Respuestas::where('pregunta_id', '=', $pregunta_id)
+                ->exists();
+
+                if ($validarRespuesta) {
+
+                    // SI LA PREGUNTA YA FUE CONTESTADA, NO SE INSERTA LA RESPUESTA
+                    return '<h1>Esta encuesta ya fue contestada anteriormente</h1>';
+                } else {
+
+                    // SI LA PREGUNTA NO HA SIDO RESPONDIDA, SE INSERTA EL REGISTRO
+                    DB::table('respuestas')->insert([
+                        ['respuesta' => $value, 'pregunta_id' => $pregunta_id, 'negociacion_id' => $idNegociacion],
+                    ]);
+                }
+            }
+        }
     }
 
     /**

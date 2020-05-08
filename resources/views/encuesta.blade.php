@@ -22,6 +22,9 @@
         <div class="shadow-lg p-4 mb-4 bg-white rounded-lg">
             <form action="{{route('respuesta.store')}}" method="POST">
                 @csrf
+                <div class="form-group">
+                    <input type="text" class="form-control" name="id_negociacion" readonly value="{{ $data["id_negociacion"] }}" style="display: none">
+                </div>
                 @foreach ($informacionPreguntas as $i => $valueI)
                     @foreach ($informacionPreguntas[$i] as $j => $value)
                         @if ($j == 'descripcion')
@@ -34,23 +37,25 @@
     
                                 <!-- VALID SI ES OPCION MULTIPLE -->
                                 @if ($informacionPreguntas[$i]["multiple"] == 1)
+                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                     <div class="custom-control custom-radio">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="option1">
                                             <label class="form-check-label" for="inlineRadio1">SI</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="option2">
                                             <label class="form-check-label" for="inlineRadio2">NO</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
+                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="option3">
                                             <label class="form-check-label" for="inlineRadio3">NO SE</label>
                                         </div>
                                     </div>
                                 @endif
                                 @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                    <input type="text" class="form-control" id="respuesta" name="respuesta" placeholder="Escirbe tu respuesta">
+                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                    <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
                                 @endif
                             </div>
                         @endif
