@@ -11,15 +11,24 @@
     <title>Encuesta IDEX - {{ $data["encuesta"] }}</title>
   </head>
   <body>
-    <br>
     <div class="container">
         <img class="float-lg-right" src="" alt="">
-        <br>
-        <br>
         <br>
         <h1 class="text-center">Encuesta IDEX - {{ $data["encuesta"] }}</h1>
         <br>
         <div class="shadow-lg p-4 mb-4 bg-white rounded-lg">
+            @switch($data["fase"])
+                @case("Primer Contacto")
+                    <h4>¡Hola!</h4>
+                    <p>Tu opinión es muy importante para nosotros ya que de esta manera podremos ofrecerte la atención y servicio que mereces.</p>
+                    <p>Te invito a responder estas breves preguntas respecto al asesor de ventas que te atendió.</p>
+                    @break
+                @case(2)
+                    
+                    @break
+                @default
+                    
+            @endswitch
             <form action="{{route('respuesta.store')}}" method="POST">
                 @csrf
                 <div class="form-group">
@@ -40,16 +49,12 @@
                                     <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                     <div class="custom-control custom-radio">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="option1">
-                                            <label class="form-check-label" for="inlineRadio1">SI</label>
+                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="Si">
+                                            <label class="form-check-label" for="inlineRadio1">Si</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">NO</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="option3">
-                                            <label class="form-check-label" for="inlineRadio3">NO SE</label>
+                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="No">
+                                            <label class="form-check-label" for="inlineRadio2">No</label>
                                         </div>
                                     </div>
                                 @endif
@@ -61,7 +66,7 @@
                         @endif
                     @endforeach
                 @endforeach
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="text-center btn btn-outline-success btn-lg">Enviar encuesta</button>
             </form>
         </div>
     </div>
