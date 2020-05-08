@@ -18,4 +18,9 @@ Route::get('/', function () {
 });
 
 // SE CREA RUTA PARA MOSTRAR LA VISTA DE LA ENCUESTA
-Route::get('encuesta/{nombre}/{fase}/{id}', 'Encuesta\EncuestaController@encuesta');
+Route::get('encuesta-IDEX/{nombre}/{fase}/{id}', 'Encuesta\EncuestaController@encuesta');
+
+/**
+ * Rutas para el controlador GuardarRespuesta
+ */
+Route::resource('respuesta', 'GuardarRespuesta\GuardarRespuestaController');

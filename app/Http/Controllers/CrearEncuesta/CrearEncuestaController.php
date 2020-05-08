@@ -39,20 +39,33 @@ class CrearEncuestaController extends Controller
     public function store(Request $request)
     {
         // SE CREA UNA INSTANCIA DEL MODELO
-        $crearEncuesta = new Encuestas; # Crear nuevo modelo
+        $crearEncuesta = new Encuestas;
+        // CONSULTA PARA VALIDAR SI EL REGISTRO EXISTE
+        $validarEncuesta = Encuestas::where('nombre', '=', $request->encuesta)
+        ->where('desarrollo', '=', $request->desarrollo)
+        ->where('fase', '=', $request->fase)
+        ->exists();
         
-        // SE GUARDAN LOS DATOS DEL REQUEST EN SUS RESPECTIVOS CAMPOS
-        $crearEncuesta->nombre = $request->encuesta;
-        $crearEncuesta->desarrollo = $request->desarrollo;
-        $crearEncuesta->fase = $request->fase;
+        // VALIDAMOS QUE EL REGISTRO NO EXISTA PARA INSERTARLO
+        if ($validarEncuesta) {
 
-        // GUARDAMOS EN LA BASE DE DATOS
-        $crearEncuesta->save();
+            return 'El registro ya existe';
+        } else {
 
-        // OBTENEMOS EL ID DE LA ENCUESTA GENERADO
-        $idEncuesta = $crearEncuesta->id;
-        // LO RETORNAMOS COMO RESPUESTA
-        return $idEncuesta;
+            // SE GUARDAN LOS DATOS DEL REQUEST EN SUS RESPECTIVOS CAMPOS
+            $crearEncuesta->nombre = $request->encuesta;
+            $crearEncuesta->desarrollo = $request->desarrollo;
+            $crearEncuesta->fase = $request->fase;
+
+            // GUARDAMOS EN LA BASE DE DATOS
+            $crearEncuesta->save();
+
+            // OBTENEMOS EL ID DE LA ENCUESTA GENERADO
+            $idEncuesta = $crearEncuesta->id;
+            // LO RETORNAMOS COMO RESPUESTA
+            return $idEncuesta;
+        }
+
     }
 
     /**

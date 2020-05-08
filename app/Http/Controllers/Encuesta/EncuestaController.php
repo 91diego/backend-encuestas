@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Encuesta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
+use App\Encuestas;
+
 class EncuestaController extends Controller
 {
 
@@ -216,58 +219,30 @@ class EncuestaController extends Controller
      * @param int id
      * @return \Illuminate\Http\Response
      */
-    public function encuesta($nombre, $fase, $id){
-
-        echo $nombre."<br>".$fase."<br>".$id."<br>";
+    public function encuesta($nombre, $fase, $id)
+    {
         // ALMACENA LOS DATOS QUE SE PASARAN A LA VISTA
         $data = [];
 
-        // INFORMACION DEL DEAL
-        // OBTIENE LA INFORMACION DE LA NEGOCIACION
-        $detailsDeal = $this->bitrixSite.'/rest/117/'.$this->bitrixToken.'/crm.deal.get?ID='.$id;
+        $preguntas = DB::table('encuestas')
+        ->join('preguntas', 'preguntas.encuesta_id', '=', 'encuestas.id')
+        ->where('encuestas.nombre', 'LIKE', '%'. $nombre . '%')
+        ->where('encuestas.fase', '=', $fase)
+        ->select('preguntas.id', 'preguntas.numero', 'preguntas.descripcion', 
+        'preguntas.multiple')
+        ->get();
 
-        // OBTIENE LA RESPUESTA DE LA API REST BITRIX
-        $responseAPI = file_get_contents($detailsDeal);
+        // dd($preguntas);
+        $informacionPreguntas = json_decode($preguntas, 1);
+        // dd($informacionPreguntas[0]["nombre"]);
 
-        // CAMPOS DE LA RESPUESTA
-        $deal = json_decode($responseAPI, true);
-        // FIN INFORMACION DEAL
+        $data = [
 
-        // CONTIENE LOS DATOS DEL RESPONSABLE
-        $user = $this->users($deal["result"]["ASSIGNED_BY_ID"]);
-        // dd($user);
+            "id_negociacion" => $id,
+            "encuesta" => $nombre,
+            "fase" => $fase
+        ];
 
-        // CONTIENE LOS DETALLES DEL DEPARTAMENTO
-        $departament = $this->departament($user[0]["UF_DEPARTMENT"][0]);
-        // dd($departaments);
-
-        // CONTIENE LOS DATOS DEL GERENTE
-        $manager = $this->users($departament[0]["UF_HEAD"]);
-        // dd($manager);
-
-        // CONTIENE EL CANAL DE VENTAS
-        $purchase = $this->purchase($deal["result"]["UF_CRM_5D03F07FB6F84"]);
-        // dd($purchase);
-
-        // CONTIENE EL ORIGEN DE LA VENTA
-        $source = $this->source($deal["result"]["SOURCE_ID"]);
-        // dd($source);
-
-        // CONTIENE EL NOMBRE DEL DESARROLLO
-        $place = $this->place($deal["result"]["UF_CRM_5D12A1A9D28ED"]);
-        // dd($place);
-
-        array_push($data, [
-            "negociacion" => $deal["result"]["TITLE"],
-            "desarrollo" => $place,
-            "responsable" => $user[0]["NAME"]." ".$user[0]["LAST_NAME"],
-            "puesto" => $user[0]["WORK_POSITION"],
-            "departamento" => $departament[0]["NAME"],
-            "gerente_responsable" => $manager[0]["NAME"]." ".$manager[0]["LAST_NAME"],
-            "origen" => $source[0]["NAME"],
-            "canal_ventas" => $purchase["NAME"],
-        ]);
-
-        return $data;
+        return view('encuesta', compact('data', 'informacionPreguntas'));
     }    
 }
