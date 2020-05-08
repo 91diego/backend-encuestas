@@ -48,7 +48,7 @@ class MedicionController extends Controller
      */
     public function show($id)
     {
-        return Mediciones::where('id', $id)->get();
+        return Mediciones::where('fase_id', '=', $id)->get();
     }
 
     /**

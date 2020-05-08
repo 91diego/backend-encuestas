@@ -56,6 +56,7 @@ class CrearPreguntaController extends Controller
         // SE GUARDAN LOS DATOS DEL REQUEST EN SUS RESPECTIVOS CAMPOS
         $crearPregunta->descripcion = $request->pregunta;
         $crearPregunta->multiple = $request->multiple;
+        $crearPregunta->medicion_id = $request->medicion;
         $crearPregunta->encuesta_id = $request->encuesta_id;
 
         // GUARDAMOS EN LA BASE DE DATOS

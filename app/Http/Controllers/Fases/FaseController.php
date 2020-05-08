@@ -17,7 +17,7 @@ class FaseController extends Controller
     public function index()
     {
         $fases = Fases::get();
-        echo json_encode($fases);
+        return $fases;
     }
 
     /**

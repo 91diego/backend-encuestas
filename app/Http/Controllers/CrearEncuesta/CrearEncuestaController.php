@@ -55,7 +55,7 @@ class CrearEncuestaController extends Controller
             // SE GUARDAN LOS DATOS DEL REQUEST EN SUS RESPECTIVOS CAMPOS
             $crearEncuesta->nombre = $request->encuesta;
             $crearEncuesta->desarrollo = $request->desarrollo;
-            $crearEncuesta->fase = $request->fase;
+            $crearEncuesta->fase_id = $request->fase;
 
             // GUARDAMOS EN LA BASE DE DATOS
             $crearEncuesta->save();
