@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Mediciones;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Mediciones;
+
 class MedicionController extends Controller
 {
     /**
@@ -46,7 +48,7 @@ class MedicionController extends Controller
      */
     public function show($id)
     {
-        //
+        return Mediciones::where('id', $id)->get();
     }
 
     /**

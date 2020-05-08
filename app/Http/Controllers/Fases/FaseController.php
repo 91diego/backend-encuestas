@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Fases;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Fases;
+
 class FaseController extends Controller
 {
     /**
@@ -14,7 +16,8 @@ class FaseController extends Controller
      */
     public function index()
     {
-        //
+        $fases = Fases::get();
+        echo json_encode($fases);
     }
 
     /**
