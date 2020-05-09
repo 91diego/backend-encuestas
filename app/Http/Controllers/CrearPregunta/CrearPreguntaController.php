@@ -71,7 +71,17 @@ class CrearPreguntaController extends Controller
      */
     public function show($id)
     {
-        $pregunta = Preguntas::where('encuesta_id', $id)->get();
+        /* DB::table('preguntas')
+        ->join('preguntas', 'preguntas.encuesta_id', '=', 'encuestas.id')
+        ->join('mediciones', 'mediciones.id', '=', 'preguntas.medicion_id')
+        ->where('encuestas.nombre', 'LIKE', '%'. $nombre . '%')
+        ->where('encuestas.fase_id', '=', $fase)
+        ->select('preguntas.id', 'preguntas.numero', 'preguntas.descripcion', 
+        'preguntas.multiple', 'mediciones.nombre')
+        ->get(); */
+
+        $pregunta = Preguntas::join('mediciones', 'preguntas.medicion_id', '=', 'mediciones.id')
+        ->where('encuesta_id', $id)->get();
         return $pregunta;
     }
 

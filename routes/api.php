@@ -22,3 +22,8 @@ Route::resource('fases', 'Fases\FaseController');
   * Rutas para el controlador Medicion
   */
 Route::resource('mediciones', 'Mediciones\MedicionController');
+
+/**
+ * Rutas para el controlador CrearQr
+ */
+Route::resource('qr', 'QrCode\CrearQrController');
