@@ -226,10 +226,11 @@ class EncuestaController extends Controller
 
         $preguntas = DB::table('encuestas')
         ->join('preguntas', 'preguntas.encuesta_id', '=', 'encuestas.id')
+        ->join('mediciones', 'mediciones.id', '=', 'preguntas.medicion_id')
         ->where('encuestas.nombre', 'LIKE', '%'. $nombre . '%')
-        ->where('encuestas.fase', '=', $fase)
+        ->where('encuestas.fase_id', '=', $fase)
         ->select('preguntas.id', 'preguntas.numero', 'preguntas.descripcion', 
-        'preguntas.multiple')
+        'preguntas.multiple', 'mediciones.nombre')
         ->get();
 
         // dd($preguntas);
@@ -243,6 +244,20 @@ class EncuestaController extends Controller
             "fase" => $fase
         ];
 
-        return view('encuesta', compact('data', 'informacionPreguntas'));
+        $mensaje = [
+
+            "ASESOR" => "Respecto al asesor",
+            "PARA FINALIZAR" => "Para finalizar",
+            "APARTADO" => "Apartado",
+            "INTEGRACION DE EXPEDIENTE" => "Integracion expediente",
+            "FIRMA DE CONTRATO" => "Firma de contrato",
+            "SEGUIMIENTO" => "Seguimiento",
+            "ESCRITURACION" => "Escrituracion",
+            "ENTREGA DE UNIDAD" => "Entrega de unidad",
+            "ADMINISTRACION CONDOMINAL" => "Administracion condominal",
+            "ATENCION AL PROPIETARIO" => "Atencion al propietario",
+        ];
+
+        return view('encuesta', compact('data', 'informacionPreguntas', 'mensaje'));
     }    
 }
