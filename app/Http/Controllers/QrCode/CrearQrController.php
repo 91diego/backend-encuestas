@@ -14,7 +14,7 @@ class CrearQrController extends Controller
      */
     public function index()
     {
-        //
+        return 'Creando el codigo QR';
     }
 
     /**
