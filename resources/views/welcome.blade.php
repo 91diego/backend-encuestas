@@ -1,3 +1,3 @@
 <div class="title m-b-md">
-    {!!QrCode::size(300)->generate("www.nigmacode.com") !!}
+    <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate('Transfórmame en un QrCode!')) !!} ">
  </div>
