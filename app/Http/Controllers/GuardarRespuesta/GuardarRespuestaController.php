@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Negociaciones;
 use App\Respuestas;
+use App\EnvioEncuestas;
 use DB;
 
 class GuardarRespuestaController extends Controller
@@ -163,6 +164,9 @@ class GuardarRespuestaController extends Controller
      */
     public function store(Request $request)
     {   
+        date_default_timezone_set('America/Mexico_City');
+        $fecha = date('Y m d h:i:s A');
+
         // INSTANCIA DE LOS MODELOS
         $negociaciones = new Negociaciones;
         $respuestas = new Respuestas;
@@ -171,6 +175,7 @@ class GuardarRespuestaController extends Controller
         $data = [];
 
         $id = $request->id_negociacion;
+        $idEncuesta = $request->id_encuesta;
         
         // INFORMACION DEL DEAL
         // OBTIENE LA INFORMACION DE LA NEGOCIACION
@@ -251,17 +256,16 @@ class GuardarRespuestaController extends Controller
         $pregunta_id = 0;
         // SE ITERA EL REQUEST PARA GUARDAR LAS PREGUNTAS
         foreach($request->all() as $key => $value) {
-
             $id = strstr($key, 'id');
 
             // SI EL INDICE ES IGUAL A ID Y DISTINTO A ID_NEGOCIACION
             // SE GUARDA EL VALOR DEL ID DE LA PREGUNTA
-            if ($key == $id && $key != 'id_negociacion') {
+            if ($key == $id && $key != 'id_negociacion' && $key != 'id_encuesta') {
                 
                 $pregunta_id = $value;
             }
 
-            if ($key != '_token' && $key != 'id_negociacion' && $key != $id) {
+            if ($key != '_token' && $key != 'id_negociacion' && $key != 'id_encuesta' && $key != $id) {
 
                 // CONSULTA PARA VALIDAR SI EL REGISTRO EXISTE
                 $validarRespuesta = Respuestas::where('pregunta_id', '=', $pregunta_id)
@@ -277,6 +281,22 @@ class GuardarRespuestaController extends Controller
                     DB::table('respuestas')->insert([
                         ['respuesta' => $value, 'pregunta_id' => $pregunta_id, 'negociacion_id' => $idNegociacion],
                     ]);
+
+                    // VALIDAMOS SI LA ENCUESTA YA FUE ENVIADA
+                    $validarEnvio = EnvioEncuestas::where('negociacion_id', $request->id_negociacion)
+                    ->where("encuesta_id", $request->id_encuesta)
+                    ->exists();
+
+                    if ($validarEnvio) {
+
+                        // SI LA ENCUESTA NO HA SIDO ENVIADA AL CLIENTE, SE INSERTAN LOS DATOS DE ENVIO
+                        EnvioEncuestas::where('negociacion_id', $request->id_negociacion)
+                        ->where("encuesta_id", $request->id_encuesta)
+                        ->update(["estatus_respuesta" => "Contestado"], ["fecha_respuesta" => $fecha]);
+                        EnvioEncuestas::where('negociacion_id', $request->id_negociacion)
+                        ->where("encuesta_id", $request->id_encuesta)
+                        ->update(["fecha_respuesta" => $fecha]);
+                    }
                 }
             }
         }

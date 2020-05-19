@@ -260,7 +260,7 @@ class EncuestaController extends Controller
         ->where('encuestas.nombre', 'LIKE', '%'. $nombre . '%')
         ->where('encuestas.fase_id', '=', $fase)
         ->select('preguntas.id', 'preguntas.numero', 'preguntas.descripcion', 
-        'preguntas.multiple', 'mediciones.nombre', 'encuestas.id')
+        'preguntas.multiple', 'mediciones.nombre')
         ->get();
 
         $informacionPreguntas = json_decode($preguntas, 1);
@@ -270,7 +270,8 @@ class EncuestaController extends Controller
 
             "id_negociacion" => $id,
             "encuesta" => $nombre,
-            "fase" => $fase
+            "fase" => $fase,
+            "id_encuesta" => $encuestaId[0]["id"]
         ];
 
         $mensaje = [

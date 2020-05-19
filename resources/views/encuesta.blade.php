@@ -35,6 +35,9 @@
                 <div class="form-group">
                     <input type="text" class="form-control" name="id_negociacion" readonly value="{{ $data["id_negociacion"] }}" style="display: none">
                 </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="id_encuesta" readonly value="{{ $data["id_encuesta"] }}" style="display: none">
+                </div>
                 @php
                     $mensajeAsesor = "";
                     $contAsesor = 0;
