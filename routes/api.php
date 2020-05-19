@@ -27,3 +27,4 @@ Route::resource('mediciones', 'Mediciones\MedicionController');
  * Rutas para el controlador CrearQr
  */
 Route::resource('qr', 'QrCode\CrearQrController');
+Route::get('qr/generar-qr/{id}', 'QrCode\CrearQrController@generarQr');
