@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 use App\Encuestas;
+use App\EnvioEncuestas;
 
 class EncuestaController extends Controller
 {
@@ -221,6 +222,35 @@ class EncuestaController extends Controller
      */
     public function encuesta($nombre, $fase, $id)
     {
+        date_default_timezone_set('America/Mexico_City');
+        $fecha = date('Y m d h:i:s A');
+
+        $encuesta = DB::table('encuestas')
+        ->where('encuestas.nombre', 'LIKE', '%'. $nombre . '%')
+        ->where('encuestas.fase_id', '=', $fase)
+        ->select('encuestas.id')
+        ->get();
+        $encuestaId = json_decode($encuesta, 1);
+
+        // VALIDAMOS SI LA ENCUESTA YA FUE ENVIADA
+        $validarEnvio = EnvioEncuestas::where('negociacion_id', '=', $id)
+        ->where("encuesta_id", $encuestaId[0]["id"])
+        ->exists();
+
+        if (!$validarEnvio) {
+
+            // SI LA ENCUESTA NO HA SIDO ENVIADA AL CLIENTE, SE INSERTAN LOS DATOS DE ENVIO
+            DB::table('envio_encuestas')->insert([
+                [
+                    "encuesta_id" => $encuestaId[0]["id"],
+                    "negociacion_id" => $id,
+                    "estatus_envio" => "Enviada",
+                    "fecha_envio" => $fecha,
+                    "estatus_respuesta" => "Pendiente",
+                    "fecha_respuesta" => ""
+                ],
+            ]);
+        }
         // ALMACENA LOS DATOS QUE SE PASARAN A LA VISTA
         $data = [];
 
@@ -230,10 +260,9 @@ class EncuestaController extends Controller
         ->where('encuestas.nombre', 'LIKE', '%'. $nombre . '%')
         ->where('encuestas.fase_id', '=', $fase)
         ->select('preguntas.id', 'preguntas.numero', 'preguntas.descripcion', 
-        'preguntas.multiple', 'mediciones.nombre')
+        'preguntas.multiple', 'mediciones.nombre', 'encuestas.id')
         ->get();
 
-        // dd($preguntas);
         $informacionPreguntas = json_decode($preguntas, 1);
         // dd($informacionPreguntas[0]["nombre"]);
 
