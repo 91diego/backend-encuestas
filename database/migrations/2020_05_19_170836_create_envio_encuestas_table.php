@@ -15,6 +15,14 @@ class CreateEnvioEncuestasTable extends Migration
     {
         Schema::create('envio_encuestas', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger("encuesta_id");
+            $table->foreign("encuesta_id")->references("id")->on("encuestas");
+            $table->unsignedBigInteger("negociacion_id");
+            $table->foreign("negociacion_id")->references("id")->on("negociaciones");
+            $table->string('estatus_envio');
+            $table->string('fecha_envio');
+            $table->string('estatus_respuesta')->nullable();
+            $table->string('fecha_respuesta')->nullable();
             $table->timestamps();
         });
     }
