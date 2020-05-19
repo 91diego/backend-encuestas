@@ -244,7 +244,7 @@ class EncuestaController extends Controller
                 [
                     "encuesta_id" => $encuestaId[0]["id"],
                     "negociacion_id" => $id,
-                    "estatus_envio" => "Enviada",
+                    "estatus_envio" => "Enviado",
                     "fecha_envio" => $fecha,
                     "estatus_respuesta" => "Pendiente",
                     "fecha_respuesta" => ""

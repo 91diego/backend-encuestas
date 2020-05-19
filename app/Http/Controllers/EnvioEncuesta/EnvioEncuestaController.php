@@ -5,6 +5,11 @@ namespace App\Http\Controllers\EnvioEncuesta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\EnvioEncuestas;
+use App\Encuestas;
+use App\Negociaciones;
+use DB;
+
 class EnvioEncuestaController extends Controller
 {
     /**
@@ -14,7 +19,14 @@ class EnvioEncuestaController extends Controller
      */
     public function index()
     {
-        //
+        // $envios = EnvioEncuestas::get();
+        $envios = DB::table('envio_encuestas')
+        ->join('encuestas', 'encuestas.id', '=', 'envio_encuestas.encuesta_id')
+        ->join('negociaciones', 'negociaciones.id_negociacion', '=', 'envio_encuestas.negociacion_id')
+        ->select('encuestas.nombre', 'negociaciones.desarrollo', 'envio_encuestas.estatus_envio', 'envio_encuestas.fecha_envio',
+        'envio_encuestas.numero_envios', 'envio_encuestas.estatus_respuesta','envio_encuestas.fecha_respuesta')
+        ->get();
+        return $envios;
     }
 
     /**

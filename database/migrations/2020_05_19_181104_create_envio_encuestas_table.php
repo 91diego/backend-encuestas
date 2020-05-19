@@ -18,9 +18,9 @@ class CreateEnvioEncuestasTable extends Migration
             $table->unsignedBigInteger("encuesta_id");
             $table->foreign("encuesta_id")->references("id")->on("encuestas");
             $table->unsignedBigInteger("negociacion_id");
-            // $table->foreign("negociacion_id")->references("id_negociacion")->on("negociaciones");
             $table->string('estatus_envio');
             $table->string('fecha_envio');
+            $table->integer('numero_envios');
             $table->string('estatus_respuesta')->nullable();
             $table->string('fecha_respuesta')->nullable();
             $table->timestamps();

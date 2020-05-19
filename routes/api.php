@@ -23,6 +23,11 @@ Route::resource('fases', 'Fases\FaseController');
   */
 Route::resource('mediciones', 'Mediciones\MedicionController');
 
+ /**
+  * Rutas para el controlador Medicion
+  */
+  Route::resource('envios', 'EnvioEncuesta\EnvioEncuestaController');
+
 /**
  * Rutas para el controlador CrearQr
  */
