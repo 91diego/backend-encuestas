@@ -28,8 +28,9 @@ class EncuestaController extends Controller
      */
     public function index()
     {
+        // MUESTRA EL LISTADO DE LAS ENCUESTAS
         $encuestas = Encuestas::join('fases', 'encuestas.fase_id', '=', 'fases.id')
-        ->select('encuestas.nombre as encuesta', 'encuestas.desarrollo', 'fases.nombre as fase')
+        ->select('encuestas.id', 'encuestas.nombre as encuesta', 'encuestas.desarrollo', 'fases.nombre as fase')
         ->get();
         return $encuestas;
     }
@@ -63,7 +64,11 @@ class EncuestaController extends Controller
      */
     public function show($id)
     {
-        //
+        $encuesta = Encuestas::join('fases', 'fases.id', '=', 'encuestas.fase_id')
+        ->select('encuestas.nombre as encuesta', 'encuestas.desarrollo', 
+        'fases.nombre as fase')
+        ->find($id);
+        return $encuesta;
     }
 
     /**
