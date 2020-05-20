@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Route;
 /**
  * Rutas para el controlador CrearEncuesta
  */
+Route::resource('encuestas', 'Encuesta\EncuestaController');
+
+/**
+ * Rutas para el controlador CrearEncuesta
+ */
 Route::resource('encuesta', 'CrearEncuesta\CrearEncuestaController');
 
 /**

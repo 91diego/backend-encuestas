@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
+use App\Fases;
 use App\Encuestas;
 use App\EnvioEncuestas;
 
@@ -27,7 +28,10 @@ class EncuestaController extends Controller
      */
     public function index()
     {
-        //
+        $encuestas = Encuestas::join('fases', 'encuestas.fase_id', '=', 'fases.id')
+        ->select('encuestas.nombre as encuesta', 'encuestas.desarrollo', 'fases.nombre as fase')
+        ->get();
+        return $encuestas;
     }
 
     /**
