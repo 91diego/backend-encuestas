@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Preguntas;
+use App\Mediciones;
 
 class CrearPreguntaController extends Controller
 {
@@ -80,8 +81,12 @@ class CrearPreguntaController extends Controller
         'preguntas.multiple', 'mediciones.nombre')
         ->get(); */
 
-        $pregunta = Preguntas::join('mediciones', 'preguntas.medicion_id', '=', 'mediciones.id')
-        ->where('encuesta_id', $id)->get();
+        $pregunta = Preguntas::join('mediciones', 'mediciones.id', '=', 'preguntas.medicion_id')
+        ->select('preguntas.id', 'preguntas.numero', 'preguntas.descripcion', 'preguntas.multiple', 'mediciones.nombre as medicion')
+        ->where('preguntas.encuesta_id' ,'=', $id)
+        ->get();
+        /*$pregunta = Preguntas::join('mediciones', 'preguntas.medicion_id', '=', 'mediciones.id')
+        ->where('encuesta_id', $id)->get();*/
         return $pregunta;
     }
 
