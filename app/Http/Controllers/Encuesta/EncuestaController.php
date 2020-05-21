@@ -66,7 +66,7 @@ class EncuestaController extends Controller
     {
         $encuesta = Encuestas::join('fases', 'fases.id', '=', 'encuestas.fase_id')
         ->select('encuestas.nombre as encuesta', 'encuestas.desarrollo', 
-        'fases.nombre as fase')
+        'fases.nombre as fase', 'fases.id')
         ->find($id);
         return $encuesta;
     }
