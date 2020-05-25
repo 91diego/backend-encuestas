@@ -82,6 +82,25 @@ class CrearPreguntaController extends Controller
         ->where('encuesta_id', $id)->get();*/
         return $pregunta;
     }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showQuestion($id)
+    {
+
+        $pregunta = Preguntas::join('mediciones', 'mediciones.id', '=', 'preguntas.medicion_id')
+        ->select('preguntas.id', 'preguntas.numero', 'preguntas.descripcion', 'preguntas.multiple', 'mediciones.nombre as medicion',
+        'mediciones.id as medicionId')
+        ->where('preguntas.id' ,'=', $id)
+        ->get();
+        /*$pregunta = Preguntas::join('mediciones', 'preguntas.medicion_id', '=', 'mediciones.id')
+        ->where('encuesta_id', $id)->get();*/
+        return $pregunta;
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -91,7 +110,7 @@ class CrearPreguntaController extends Controller
      */
     public function edit($id)
     {
-        //
+        return 'Edita';
     }
 
     /**

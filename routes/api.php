@@ -17,6 +17,7 @@ Route::resource('encuesta', 'CrearEncuesta\CrearEncuestaController');
  * Rutas para el controlador CrearPregunta
  */
 Route::resource('pregunta', 'CrearPregunta\CrearPreguntaController');
+Route::get('pregunta/mostrar/{id}', 'CrearPregunta\CrearPreguntaController@showQuestion');
 
 /**
  * Rutas para el controlador Fase
