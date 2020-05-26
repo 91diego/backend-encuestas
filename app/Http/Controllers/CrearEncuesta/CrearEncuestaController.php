@@ -41,20 +41,20 @@ class CrearEncuestaController extends Controller
         // SE CREA UNA INSTANCIA DEL MODELO
         $crearEncuesta = new Encuestas;
         // CONSULTA PARA VALIDAR SI EL REGISTRO EXISTE
-        $validarEncuesta = Encuestas::where('nombre', '=', $request->encuesta)
-        ->where('desarrollo', '=', $request->desarrollo)
-        ->where('fase', '=', $request->fase)
+        $validarEncuesta = Encuestas::where('nombre', '=', strtoupper($request->encuesta))
+        ->where('desarrollo', '=', strtoupper($request->desarrollo))
+        ->where('fase_id', '=', $request->fase)
         ->exists();
         
         // VALIDAMOS QUE EL REGISTRO NO EXISTA PARA INSERTARLO
         if ($validarEncuesta) {
 
-            return 'El registro ya existe';
+            return 'El nombre '.strtoupper($request->encuesta).' ya existe. Favor de cambiarlo o modificar la fase que se le asignó.';
         } else {
 
             // SE GUARDAN LOS DATOS DEL REQUEST EN SUS RESPECTIVOS CAMPOS
-            $crearEncuesta->nombre = $request->encuesta;
-            $crearEncuesta->desarrollo = $request->desarrollo;
+            $crearEncuesta->nombre = strtoupper($request->encuesta);
+            $crearEncuesta->desarrollo = strtoupper($request->desarrollo);
             $crearEncuesta->fase_id = $request->fase;
 
             // GUARDAMOS EN LA BASE DE DATOS

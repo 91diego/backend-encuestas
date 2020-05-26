@@ -82,7 +82,7 @@ class CrearPreguntaController extends Controller
         ->where('encuesta_id', $id)->get();*/
         return $pregunta;
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -97,8 +97,6 @@ class CrearPreguntaController extends Controller
         'mediciones.id as medicionId')
         ->where('preguntas.id' ,'=', $id)
         ->get();
-        /*$pregunta = Preguntas::join('mediciones', 'preguntas.medicion_id', '=', 'mediciones.id')
-        ->where('encuesta_id', $id)->get();*/
         return $pregunta;
     }
 
@@ -122,7 +120,13 @@ class CrearPreguntaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $p = Preguntas::where('id', $id)
+        ->update(['descripcion' => $request->pregunta]);
+        $x = Preguntas::where('id', $id)
+        ->update(['multiple' => $request->multiple]);
+        $pregunta = Preguntas::where('id', $id)
+        ->update(['medicion_id' => $request->medicion]);
+        return $pregunta;
     }
 
     /**
