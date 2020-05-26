@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Fases;
 use App\Encuestas;
 use App\EnvioEncuestas;
+use App\Negociaciones;
 
 class EncuestaController extends Controller
 {
@@ -260,6 +261,88 @@ class EncuestaController extends Controller
                 ],
             ]);
         }
+
+        /* GUARDA NEGOCIACION */
+        $negociaciones = new Negociaciones;
+        $dataDeal = [];
+        // INFORMACION DEL DEAL
+        // OBTIENE LA INFORMACION DE LA NEGOCIACION
+        $detailsDeal = $this->bitrixSite.'/rest/117/'.$this->bitrixToken.'/crm.deal.get?ID='.$id;
+
+        // OBTIENE LA RESPUESTA DE LA API REST BITRIX
+        $responseAPI = file_get_contents($detailsDeal);
+
+        // CAMPOS DE LA RESPUESTA
+        $deal = json_decode($responseAPI, true);
+        // FIN INFORMACION DEAL
+
+        // CONTIENE LOS DATOS DEL RESPONSABLE
+        $user = $this->users($deal["result"]["ASSIGNED_BY_ID"]);
+        // dd($user);
+
+        // CONTIENE LOS DETALLES DEL DEPARTAMENTO
+        $departament = $this->departament($user[0]["UF_DEPARTMENT"][0]);
+        // dd($departaments);
+
+        // CONTIENE LOS DATOS DEL GERENTE
+        $manager = $this->users($departament[0]["UF_HEAD"]);
+        // dd($manager);
+
+        // CONTIENE EL CANAL DE VENTAS
+        $purchase = $this->purchase($deal["result"]["UF_CRM_5D03F07FB6F84"]);
+        // dd($purchase);
+
+        // CONTIENE EL ORIGEN DE LA VENTA
+        $source = $this->source($deal["result"]["SOURCE_ID"]);
+        // dd($source);
+
+        // CONTIENE EL NOMBRE DEL DESARROLLO
+        $place = $this->place($deal["result"]["UF_CRM_5D12A1A9D28ED"]);
+        // dd($place);
+
+        array_push($dataDeal, [
+            "negociacion" => strtoupper($deal["result"]["TITLE"]),
+            "desarrollo" => strtoupper($place),
+            "responsable" => strtoupper($user[0]["NAME"]." ".$user[0]["LAST_NAME"]),
+            "puesto" => strtoupper($user[0]["WORK_POSITION"]),
+            "departamento" => strtoupper($departament[0]["NAME"]),
+            "gerente_responsable" => strtoupper($manager[0]["NAME"]." ".$manager[0]["LAST_NAME"]),
+            "origen" => \strtoupper($source[0]["NAME"]),
+            "canal_ventas" =>  strtoupper($purchase["NAME"]),
+        ]);
+
+        // CONSULTA PARA VALIDAR SI EL REGISTRO EXISTE
+        $validarNegociacion = Negociaciones::where('id_negociacion', '=', $id)
+        ->exists();
+
+        if ($validarNegociacion) {
+            
+            // SI EXISTE EL REGISTRO, SE HACE LA CONSULTA Y SE DEVUELVE EL ID DEL REGISTRO
+            $validarNegociacion = Negociaciones::where('id_negociacion', $id)
+            ->first();
+            $idNegociacion = $validarNegociacion->id;
+        } else {
+
+            // SI LA NEGOCIACION NO EXISTE, SE INSERTA A LA BASE DE DATOS
+            // SE GUARDAN LOS DATOS EN SUS RESPECTIVOS CAMPOS
+            $negociaciones->id_negociacion = $id;
+            $negociaciones->desarrollo = $dataDeal[0]["negociacion"];
+            $negociaciones->responsable = $dataDeal[0]["responsable"];
+            $negociaciones->puesto_responsable = $dataDeal[0]["puesto"];
+            $negociaciones->departamento_responsable = $dataDeal[0]["departamento"];
+            $negociaciones->gerente_responsable = $dataDeal[0]["gerente_responsable"];
+            $negociaciones->origen = $dataDeal[0]["origen"];
+            $negociaciones->canal_ventas = $dataDeal[0]["canal_ventas"];
+
+            // GUARDAMOS EN LA BASE DE DATOS
+            $negociaciones->save();
+
+            // OBTENEMOS EL ID DE LA NEGOCIACION GENERADO EN LA BASE DE DATOS
+            $idNegociacion = $negociaciones->id;
+        }
+
+        /* FIN GUARDAR NEGOCIACION */
+
         // ALMACENA LOS DATOS QUE SE PASARAN A LA VISTA
         $data = [];
 
@@ -273,6 +356,7 @@ class EncuestaController extends Controller
         ->get();
 
         $informacionPreguntas = json_decode($preguntas, 1);
+        // dd($informacionPreguntas);
         // dd($informacionPreguntas[0]["nombre"]);
 
         $data = [
