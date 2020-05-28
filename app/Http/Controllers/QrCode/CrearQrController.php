@@ -35,7 +35,8 @@ class CrearQrController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {   
+    {
+        return 'QR GENEARATOR';   
     }
 
     /**
@@ -56,12 +57,11 @@ class CrearQrController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
         $this->writeToLog($request->id, "ADD QR");
 
         // OBTIENE LA RESPUESTA DE LA API REST BITRIX
-        $responseAPI = file_get_contents($urlDeals);
-        $datos = json_decode($responseAPI, true);
+        /*$responseAPI = file_get_contents($urlDeals);
+        $datos = json_decode($responseAPI, true);*/
         $qrCodePrimerContacto = base64_encode(QrCode::format('png')
         ->size(300)->color(40, 40, 40)
         ->backgroundColor(255,255,0)
@@ -76,7 +76,7 @@ class CrearQrController extends Controller
 
             array(
 
-                "ID" => $id,
+                "ID" => $request->id,
                 "fields" => array(
                     "UF_CRM_1589138577" => $qrCodePrimerContacto //$qrCodePrimerContacto
                 ),
@@ -119,45 +119,6 @@ class CrearQrController extends Controller
      */
     public function edit($id)
     {
-        // $id = 7354;
-        $this->writeToLog($id, "SHOW");
-        $qrCodePrimerContacto = base64_encode(QrCode::format('png')
-        ->size(300)->color(40, 40, 40)
-        ->backgroundColor(255,255,0)
-        // ->margin(200)
-        ->generate("https://encuestas.idex.cc/encuesta-IDEX/EVALUACION%20ASESOR/1/".$id));
-        // return $qrCode;
-        // UF_CRM_1589138577 -> QR Primer contacto, tipo de dato cadena
-
-        // URL PARA ACTUALIZAR EL DEAL
-        $updateDeal = $this->bitrixSite.'/rest/117/'.$this->bitrixToken.'/crm.deal.update?ID='.$id;
-        $queryData =  http_build_query(
-
-            array(
-
-                "ID" => $id,
-                "fields" => array(
-                    "UF_CRM_1589138577" => $qrCodePrimerContacto
-                ),
-                "params" => array("REGISTER_SONET_EVENT" => "Y")
-            )
-        );
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-
-            CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_POST => 1,
-            CURLOPT_HEADER => 0,
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_URL => $updateDeal,
-            CURLOPT_POSTFIELDS => $queryData
-        ));
-
-        $result = curl_exec($curl);
-        curl_close($curl);
-        $result = json_decode($result, 1);
-        return $result;
     }
 
     /**
