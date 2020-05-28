@@ -34,51 +34,8 @@ class CrearQrController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {   
-        $id = 7387;
-        $this->writeToLog($id, "INDEX");
-
-        // OBTIENE LA RESPUESTA DE LA API REST BITRIX
-        $responseAPI = file_get_contents($urlDeals);
-        $datos = json_decode($responseAPI, true);
-        $qrCodePrimerContacto = base64_encode(QrCode::format('png')
-        ->size(300)->color(40, 40, 40)
-        ->backgroundColor(255,255,0)
-        // ->margin(200)
-        ->generate("https://encuestas.idex.cc/encuesta-IDEX/EVALUACION%20ASESOR/1/$id"));
-        // return $qrCode;
-        // UF_CRM_1589138577 -> QR Primer contacto, tipo de dato cadena
-
-        // URL PARA ACTUALIZAR EL DEAL
-        $updateDeal = $this->bitrixSite.'/rest/117/'.$this->bitrixToken.'/crm.deal.update?ID='.$id;
-        $queryData =  http_build_query(
-
-            array(
-
-                "ID" => $id,
-                "fields" => array(
-                    "UF_CRM_1589138577" => $qrCodePrimerContacto //$qrCodePrimerContacto
-                ),
-                "params" => array("REGISTER_SONET_EVENT" => "Y")
-            )
-        );
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-
-            CURLOPT_SSL_VERIFYPEER => 0,
-            CURLOPT_POST => 1,
-            CURLOPT_HEADER => 0,
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_URL => $updateDeal,
-            CURLOPT_POSTFIELDS => $queryData
-        ));
-
-        $result = curl_exec($curl);
-        curl_close($curl);
-        $result = json_decode($result, 1);
-        return $result;
     }
 
     /**
@@ -99,18 +56,8 @@ class CrearQrController extends Controller
      */
     public function store(Request $request)
     {
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $this->writeToLog($id, "SHOW");
+        dd($request);
+        $this->writeToLog($request->id, "ADD QR");
 
         // OBTIENE LA RESPUESTA DE LA API REST BITRIX
         $responseAPI = file_get_contents($urlDeals);
@@ -119,12 +66,12 @@ class CrearQrController extends Controller
         ->size(300)->color(40, 40, 40)
         ->backgroundColor(255,255,0)
         // ->margin(200)
-        ->generate("https://encuestas.idex.cc/encuesta-IDEX/EVALUACION%20ASESOR/1/$id"));
+        ->generate("https://encuestas.idex.cc/encuesta-IDEX/$request->encuesta/1/$request->id"));
         // return $qrCode;
         // UF_CRM_1589138577 -> QR Primer contacto, tipo de dato cadena
 
         // URL PARA ACTUALIZAR EL DEAL
-        $updateDeal = $this->bitrixSite.'/rest/117/'.$this->bitrixToken.'/crm.deal.update?ID='.$id;
+        $updateDeal = $this->bitrixSite.'/rest/117/'.$this->bitrixToken.'/crm.deal.update?ID='.$request->id;
         $queryData =  http_build_query(
 
             array(
@@ -152,6 +99,16 @@ class CrearQrController extends Controller
         curl_close($curl);
         $result = json_decode($result, 1);
         return $result;
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
     }
 
     /**
