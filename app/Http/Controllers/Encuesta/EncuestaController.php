@@ -134,6 +134,12 @@ class EncuestaController extends Controller
         // dd($informacionPreguntas);
         // dd($informacionPreguntas[0]["nombre"]);
 
+        $encuesta = DB::table('encuestas')
+        ->where('encuestas.nombre', 'LIKE', '%'. $nombre . '%')
+        ->where('encuestas.fase_id', '=', $fase)
+        ->select('encuestas.id')
+        ->get();
+        $encuestaId = json_decode($encuesta, 1);
         $data = [
 
             "id_negociacion" => $id,
