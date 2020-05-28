@@ -195,10 +195,11 @@ class EnvioEncuestaController extends Controller
                 [
                     "encuesta_id" => $encuestaId[0]["id"],
                     "negociacion_id" => $request->id,
-                    "estatus_envio" => "Enviado",
+                    "estatus_envio" => "ENVIADO",
                     "fecha_envio" => $fecha,
-                    "estatus_respuesta" => "Pendiente",
-                    "fecha_respuesta" => ""
+                    "numero_envios" => 1,
+                    "estatus_respuesta" => "PENDIENTE",
+                    "fecha_respuesta" => "SIN RESPUESTA"
                 ],
             ]);
         }
