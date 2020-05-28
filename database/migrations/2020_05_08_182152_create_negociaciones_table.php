@@ -16,6 +16,7 @@ class CreateNegociacionesTable extends Migration
         Schema::create('negociaciones', function (Blueprint $table) {
             $table->id();
             $table->integer("id_negociacion");
+            $table->string("cliente");
             $table->string("desarrollo");
             $table->string("responsable");
             $table->string("puesto_responsable");
