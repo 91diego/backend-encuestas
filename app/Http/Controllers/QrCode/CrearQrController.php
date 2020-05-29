@@ -36,7 +36,7 @@ class CrearQrController extends Controller
      */
     public function index(Request $request)
     {
-        return 'QR GENEARATOR';   
+        return 'QR GENEARATOR';
     }
 
     /**
@@ -60,15 +60,14 @@ class CrearQrController extends Controller
         $this->writeToLog($request->id, "ADD QR");
 
         // OBTIENE LA RESPUESTA DE LA API REST BITRIX
-        /*$responseAPI = file_get_contents($urlDeals);
-        $datos = json_decode($responseAPI, true);*/
+        // UF_CRM_1589138577 -> QR Primer contacto, tipo de dato cadena
         $qrCodePrimerContacto = base64_encode(QrCode::format('png')
-        ->size(300)->color(40, 40, 40)
-        ->backgroundColor(255,255,0)
+        ->merge('https://idex.cc/notificaciones_muro_crm/image/idex.png', .4, true)
+        ->size(450)
+        ->color(40, 40, 40)
+        ->backgroundColor(255, 255, 255)
         // ->margin(200)
         ->generate("https://encuestas.idex.cc/encuesta-IDEX/$request->encuesta/1/$request->id"));
-        // return $qrCode;
-        // UF_CRM_1589138577 -> QR Primer contacto, tipo de dato cadena
 
         // URL PARA ACTUALIZAR EL DEAL
         $updateDeal = $this->bitrixSite.'/rest/117/'.$this->bitrixToken.'/crm.deal.update?ID='.$request->id;
@@ -78,7 +77,7 @@ class CrearQrController extends Controller
 
                 "ID" => $request->id,
                 "fields" => array(
-                    "UF_CRM_1589138577" => $qrCodePrimerContacto //$qrCodePrimerContacto
+                    "UF_CRM_1589138577" => $qrCodePrimerContacto
                 ),
                 "params" => array("REGISTER_SONET_EVENT" => "Y")
             )

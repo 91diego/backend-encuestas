@@ -12,21 +12,28 @@
   </head>
   <body>
     <div class="container">
-        <img class="float-lg-right" src="" alt="">
+		<br>
+    	<img class="float-lg-left" alt="" src="https://mcusercontent.com/3ec4abd994abed22a4c543d03/images/e1651d54-fff1-442c-98ac-94b0902675b8.png" width="174.83998107910156" width="564" style="max-width:2509px;">
+    	<br>
         <br>
-        <h1 class="text-center">Encuesta IDEX - {{ $data["encuesta"] }}</h1>
+        <h1 class="text-center">{{ $data["encuesta"] }}</h1>
         <br>
         <div class="shadow-lg p-4 mb-4 bg-white rounded-lg">
-            {{$mensaje["ASESOR"]}}
+        	<p><strong>¡Hola!.</strong> Tu opinión es muy importante para nosotros ya que de esta manera podremos ofrecerte la atención y servicio que mereces.</p>
             @switch($data["fase"])
                 @case(1)
-                    <h4>¡Hola!</h4>
-                    <p>Tu opinión es muy importante para nosotros ya que de esta manera podremos ofrecerte la atención y servicio que mereces.</p>
                     <p>Te invito a responder estas breves preguntas respecto al asesor de ventas que te atendió.</p>
                     @break
                 @case(2)
-                    
+                    <p>Te invito a responder estas breves preguntas respecto a la experiencia que has tenido hasta el día de hoy con nosotros.</p>
                     @break
+
+                @case(3)
+                    <p>Te invito a responder estas breves preguntas respecto a la experiencia que has tenido hasta el día de hoy con nosotros.</p>
+                    @break
+                @case(4)
+                    <p>Te invito a responder estas breves preguntas respecto al asesor de ventas que te atendió.</p>
+                    @break                    
                 @default
                     
             @endswitch
@@ -34,9 +41,6 @@
                 @csrf
                 <div class="form-group">
                     <input type="text" class="form-control" name="id_negociacion" readonly value="{{ $data["id_negociacion"] }}" style="display: none">
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="id_encuesta" readonly value="{{ $data["id_encuesta"] }}" style="display: none">
                 </div>
                 @php
                     $mensajeAsesor = "";
@@ -136,7 +140,7 @@
                     $numPreg = 1;
                 @endphp
                 @if ($contAsesor > 0)
-                    <h3>{{$mensajeAsesor}}</h3>
+                    <h4>{{$mensajeAsesor}}</h4>
                     @foreach ($informacionPreguntas as $i => $valueI)
                         @foreach ($informacionPreguntas[$i] as $j => $value)
                         
@@ -177,7 +181,7 @@
                 @endif
 
                 @if ($contFinalizar > 0)
-                    <h3>{{$mensajeAsesorFinalizar}}</h3>
+                    <h4>{{$mensajeAsesorFinalizar}}</h4>
                     @foreach ($informacionPreguntas as $i => $valueI)
                         @foreach ($informacionPreguntas[$i] as $j => $value)
                             @if ($j == 'nombre')
@@ -205,7 +209,6 @@
                                             </div>
                                         @endif
                                         @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                            {{$informacionPreguntas[$i]['nombre']}}
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
                                         @endif
@@ -218,7 +221,7 @@
 
 
                 @if ($contApartado > 0)
-                    <h3>{{$mensajeApartado}}</h3>
+                    <h4>{{$mensajeApartado}}</h4>
                     @foreach ($informacionPreguntas as $i => $valueI)
                         @foreach ($informacionPreguntas[$i] as $j => $value)
                             @if ($j == 'nombre')
@@ -258,7 +261,7 @@
                 @endif
 
                 @if ($contExpediente > 0)
-                    <h3>{{$mensajeExpediente}}</h3>
+                    <h4>{{$mensajeExpediente}}</h4>
                     @foreach ($informacionPreguntas as $i => $valueI)
                         @foreach ($informacionPreguntas[$i] as $j => $value)
                             @if ($j == 'nombre')
@@ -298,7 +301,7 @@
                 @endif
 
                 @if ($contContrato > 0)
-                    <h3>{{$mensajeContrato}}</h3>
+                    <h4>{{$mensajeContrato}}</h4>
                     @foreach ($informacionPreguntas as $i => $valueI)
                         @foreach ($informacionPreguntas[$i] as $j => $value)
                             @if ($j == 'nombre')
@@ -338,7 +341,7 @@
                 @endif
 
                 @if ($contSeguimiento > 0)
-                    <h3>{{$mensajeSeguimiento}}</h3>
+                    <h4>{{$mensajeSeguimiento}}</h4>
                     @foreach ($informacionPreguntas as $i => $valueI)
                         @foreach ($informacionPreguntas[$i] as $j => $value)
                             @if ($j == 'nombre')
@@ -378,7 +381,7 @@
                 @endif
 
                 @if ($contEscrituracion > 0)
-                    <h3>{{$mensajeEscrituracion}}</h3>
+                    <h4>{{$mensajeEscrituracion}}</h4>
                     @foreach ($informacionPreguntas as $i => $valueI)
                         @foreach ($informacionPreguntas[$i] as $j => $value)
                             @if ($j == 'nombre')
@@ -418,7 +421,7 @@
                 @endif
 
                 @if ($contUnidad > 0)
-                    <h3>{{$mensajeUnidad}}</h3>
+                    <h4>{{$mensajeUnidad}}</h4>
                     @foreach ($informacionPreguntas as $i => $valueI)
                         @foreach ($informacionPreguntas[$i] as $j => $value)
                             @if ($j == 'nombre')
@@ -458,7 +461,7 @@
                 @endif
 
                 @if ($contAdministracion > 0)
-                    <h3>{{$mensajeAdministracion}}</h3>
+                    <h4>{{$mensajeAdministracion}}</h4>
                     @foreach ($informacionPreguntas as $i => $valueI)
                         @foreach ($informacionPreguntas[$i] as $j => $value)
                             @if ($j == 'nombre')
@@ -498,7 +501,7 @@
                 @endif
 
                 @if ($contAtencion > 0)
-                    <h3>{{$mensajeAtencion}}</h3>
+                    <h4>{{$mensajeAtencion}}</h4>
                     @foreach ($informacionPreguntas as $i => $valueI)
                         @foreach ($informacionPreguntas[$i] as $j => $value)
                             @if ($j == 'nombre')
@@ -540,8 +543,44 @@
                 <button type="submit" class="text-center btn btn-outline-success btn-lg">Enviar encuesta</button>
             </form>
         </div>
-    </div>
 
+
+
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnDividerBlock" style="min-width:100%;">
+		    <tbody class="mcnDividerBlockOuter">
+		        <tr>
+		            <td class="mcnDividerBlockInner" style="min-width: 100%; padding: 18px;">
+		                <table class="mcnDividerContent" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;border-top-width: 2px;border-top-style: solid;border-top-color: #505050;">
+		                    <tbody><tr>
+		                        <td>
+		                            <span></span>
+		                        </td>
+		                    </tr>
+		                </tbody></table>
+		            </td>
+		        </tr>
+		    </tbody>
+		</table>
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock" style="min-width:100%;">
+		    <tbody class="mcnTextBlockOuter">
+		        <tr>
+		            <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+		                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
+		                    <tbody>
+		                    	<tr>
+		                        
+			                        <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
+			                        
+										<em>Copyright © <?php echo date("Y");?> IDEX, All rights reserved.</em>
+			                        </td>
+		                    	</tr>
+		                	</tbody>
+		            	</table>
+		            </td>
+		        </tr>
+		    </tbody>
+		</table>
+    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
