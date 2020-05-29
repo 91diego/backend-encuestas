@@ -165,6 +165,7 @@ class GuardarRespuestaController extends Controller
      */
     public function store(Request $request)
     {   
+
         date_default_timezone_set('America/Mexico_City');
         $fecha = date('Y m d h:i:s A');
 
@@ -286,14 +287,15 @@ class GuardarRespuestaController extends Controller
                     // VALIDAMOS SI LA ENCUESTA YA FUE ENVIADA
                     $validarEnvio = EnvioEncuestas::where('negociacion_id', $request->id_negociacion)
                     ->where("encuesta_id", $request->id_encuesta)
+                    ->where("estatus_respuesta", "=", "CONTESTADO")
                     ->exists();
-
-                    if ($validarEnvio) {
+                    
+                    if (!$validarEnvio) {
 
                         // SI LA ENCUESTA NO HA SIDO ENVIADA AL CLIENTE, SE INSERTAN LOS DATOS DE ENVIO
                         EnvioEncuestas::where('negociacion_id', $request->id_negociacion)
                         ->where("encuesta_id", $request->id_encuesta)
-                        ->update(["estatus_respuesta" => "Contestado"], ["fecha_respuesta" => $fecha]);
+                        ->update(["estatus_respuesta" => "CONTESTADO"]);
                         EnvioEncuestas::where('negociacion_id', $request->id_negociacion)
                         ->where("encuesta_id", $request->id_encuesta)
                         ->update(["fecha_respuesta" => $fecha]);

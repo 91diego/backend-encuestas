@@ -37,10 +37,18 @@
                 @default
                     
             @endswitch
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                        - {{ $error }} <br>
+                    @endforeach
+                </div>
+            @endif
             <form action="{{route('respuesta.store')}}" method="POST">
                 @csrf
                 <div class="form-group">
                     <input type="text" class="form-control" name="id_negociacion" readonly value="{{ $data["id_negociacion"] }}" style="display: none">
+                    <input type="text" class="form-control" name="id_encuesta" readonly value="{{ $data["id_encuesta"] }}" style="display: none">
                 </div>
                 @php
                     $mensajeAsesor = "";
@@ -159,7 +167,7 @@
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="Si">
+                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Si">
                                                     <label class="form-check-label" for="inlineRadio1">Si</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
@@ -199,7 +207,7 @@
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="Si">
+                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Si">
                                                     <label class="form-check-label" for="inlineRadio1">Si</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
@@ -239,7 +247,7 @@
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="Si">
+                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Si">
                                                     <label class="form-check-label" for="inlineRadio1">Si</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
@@ -279,7 +287,7 @@
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="Si">
+                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Si">
                                                     <label class="form-check-label" for="inlineRadio1">Si</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
@@ -319,7 +327,7 @@
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="Si">
+                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Si">
                                                     <label class="form-check-label" for="inlineRadio1">Si</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
@@ -359,7 +367,7 @@
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="Si">
+                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Si">
                                                     <label class="form-check-label" for="inlineRadio1">Si</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
@@ -399,7 +407,7 @@
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="Si">
+                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Si">
                                                     <label class="form-check-label" for="inlineRadio1">Si</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
@@ -439,7 +447,7 @@
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="Si">
+                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Si">
                                                     <label class="form-check-label" for="inlineRadio1">Si</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
@@ -479,7 +487,7 @@
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="Si">
+                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Si">
                                                     <label class="form-check-label" for="inlineRadio1">Si</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
@@ -519,7 +527,7 @@
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" value="Si">
+                                                    <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Si">
                                                     <label class="form-check-label" for="inlineRadio1">Si</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
