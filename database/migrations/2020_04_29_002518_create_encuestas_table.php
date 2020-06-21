@@ -17,6 +17,7 @@ class CreateEncuestasTable extends Migration
             $table->id();
             $table->string("nombre");
             $table->string("desarrollo");
+            $table->string("fase");
             $table->timestamps();
         });
     }

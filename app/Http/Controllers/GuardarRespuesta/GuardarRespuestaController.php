@@ -165,7 +165,7 @@ class GuardarRespuestaController extends Controller
      */
     public function store(Request $request)
     {   
-
+    
         date_default_timezone_set('America/Mexico_City');
         $fecha = date('Y m d h:i:s A');
 
@@ -271,6 +271,7 @@ class GuardarRespuestaController extends Controller
 
                 // CONSULTA PARA VALIDAR SI EL REGISTRO EXISTE
                 $validarRespuesta = Respuestas::where('pregunta_id', '=', $pregunta_id)
+                ->where('negociacion_id', '=', $idNegociacion)
                 ->exists();
 
                 if ($validarRespuesta) {
@@ -278,7 +279,7 @@ class GuardarRespuestaController extends Controller
                     // SI LA PREGUNTA YA FUE CONTESTADA, NO SE INSERTA LA RESPUESTA
                     return '<h1>Esta encuesta ya fue contestada anteriormente</h1>';
                 } else {
-
+                
                     // SI LA PREGUNTA NO HA SIDO RESPONDIDA, SE INSERTA EL REGISTRO
                     DB::table('respuestas')->insert([
                         ['respuesta' => $value, 'pregunta_id' => $pregunta_id, 'negociacion_id' => $idNegociacion],
@@ -303,6 +304,8 @@ class GuardarRespuestaController extends Controller
                 }
             }
         }
+        
+        return "<h1>Gracias por tu tiempo</h1>";
     }
 
     /**
