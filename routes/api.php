@@ -39,3 +39,9 @@ Route::resource('mediciones', 'Mediciones\MedicionController');
  */
 Route::resource('qr', 'QrCode\CrearQrController');
 Route::get('qr/generar-qr/{id}', 'QrCode\CrearQrController@generarQr');
+
+/**
+ * Ruta para generar el documento excel 
+ * con la informacion de las encuestas
+ */
+Route::resource('exportar-excel', 'ExportExcel\ExportExcelController');
