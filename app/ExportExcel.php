@@ -70,6 +70,6 @@ class ExportExcel implements FromCollection, WithHeadings
         'preguntas.numero', 'preguntas.descripcion', 'respuestas.respuesta')
         ->get();
 
-        return $data;
+        return $data;//json_encode($data);
     }
 }

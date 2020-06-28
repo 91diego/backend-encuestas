@@ -8,6 +8,14 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
+use App\Negociaciones;
+use App\Respuestas;
+use App\EnvioEncuestas;
+use App\Encuestas;
+use App\Fases;
+use App\Preguntas;
+
 class ExportExcelController extends Controller
 {
     /**
@@ -16,8 +24,22 @@ class ExportExcelController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return Excel::download(new ExportExcel, 'encuestas.xlsx');
+    {    
+        $data = DB::table('negociaciones')
+        ->leftJoin('respuestas', 'respuestas.negociacion_id', '=', 'negociaciones.id')
+        ->rightJoin('envio_encuestas', 'envio_encuestas.negociacion_id', '=', 'negociaciones.id_negociacion')
+        ->rightJoin('encuestas', 'encuestas.id', '=', 'envio_encuestas.encuesta_id')
+        ->rightJoin('fases', 'fases.id', '=', 'encuestas.fase_id')
+        ->leftJoin('preguntas', 'preguntas.id', '=', 'respuestas.pregunta_id')
+        ->select('encuestas.nombre as Encuesta', 'fases.nombre as Fase', 'negociaciones.id_negociacion', 
+        'negociaciones.cliente', 'negociaciones.desarrollo', 'negociaciones.responsable',
+        'negociaciones.puesto_responsable', 'negociaciones.departamento_responsable',
+        'negociaciones.gerente_responsable', 'negociaciones.origen', 'negociaciones.canal_ventas',
+        'preguntas.numero', 'preguntas.descripcion', 'respuestas.respuesta')
+        ->get();
+        return json_encode($data);
+
+        // return Excel::download(new ExportExcel, 'encuestas.xlsx');
     }
 
     /**
