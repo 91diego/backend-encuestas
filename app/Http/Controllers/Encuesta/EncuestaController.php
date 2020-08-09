@@ -1,4 +1,11 @@
 <?php
+/**
+ * DOCUEMTACION
+ *
+ * Fecha:       2020.09.08
+ * Nombre:      Diego Gonzalez
+ * Descripcion: - Se agrega campo y comentarios_multiple a la consulta de la variable $preguntas en el metodo encuesta().
+ */
 
 namespace App\Http\Controllers\Encuesta;
 
@@ -66,7 +73,7 @@ class EncuestaController extends Controller
     public function show($id)
     {
         $encuesta = Encuestas::join('fases', 'fases.id', '=', 'encuestas.fase_id')
-        ->select('encuestas.nombre as encuesta', 'encuestas.desarrollo', 
+        ->select('encuestas.nombre as encuesta', 'encuestas.desarrollo',
         'fases.nombre as fase', 'fases.id as idFase')
         ->find($id);
         return $encuesta;
@@ -126,13 +133,11 @@ class EncuestaController extends Controller
         ->join('mediciones', 'mediciones.id', '=', 'preguntas.medicion_id')
         ->where('encuestas.nombre', 'LIKE', '%'. $nombre . '%')
         ->where('encuestas.fase_id', '=', $fase)
-        ->select('preguntas.id', 'preguntas.numero', 'preguntas.descripcion', 
-        'preguntas.multiple', 'mediciones.nombre')
+        ->select('preguntas.id', 'preguntas.numero', 'preguntas.descripcion',
+        'preguntas.multiple', 'preguntas.comentarios_multiple', 'mediciones.nombre')
         ->get();
 
         $informacionPreguntas = json_decode($preguntas, 1);
-        // dd($informacionPreguntas);
-        // dd($informacionPreguntas[0]["nombre"]);
 
         $encuesta = DB::table('encuestas')
         ->where('encuestas.nombre', 'LIKE', '%'. $nombre . '%')
@@ -163,5 +168,5 @@ class EncuestaController extends Controller
         ];
 
         return view('encuesta', compact('data', 'informacionPreguntas', 'mensaje'));
-    }    
+    }
 }

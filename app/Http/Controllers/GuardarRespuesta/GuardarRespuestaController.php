@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Documentacion
+ *
+ * Nombre:          Diego Gonzalez
+ * Fecha:           2020.09.08
+ * Descripcion:     - Se repara codigo ya que no se guardaban de manera adecuada las respuestas en el metodo store()
+ */
 namespace App\Http\Controllers\GuardarRespuesta;
 
 use App\Http\Controllers\Controller;
@@ -40,7 +46,7 @@ class GuardarRespuestaController extends Controller
         return $departament["result"];
         // FIN INFORMACION DEPARTAMENTO
     }
-  
+
     /**
      * OBTIENE LOS DATOS DEL RESPONSABLE
      *
@@ -126,8 +132,8 @@ class GuardarRespuestaController extends Controller
             ]);
         }
 
-        for ($i=0; $i < count($items); $i++) { 
-            
+        for ($i=0; $i < count($items); $i++) {
+
             if ($items[$i]["id"] == $id) {
 
                 $nombreDesarrollo = $items[$i]["nombre"];
@@ -164,8 +170,7 @@ class GuardarRespuestaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
-    
+    {
         date_default_timezone_set('America/Mexico_City');
         $fecha = date('Y m d h:i:s A');
 
@@ -178,7 +183,7 @@ class GuardarRespuestaController extends Controller
 
         $id = $request->id_negociacion;
         $idEncuesta = $request->id_encuesta;
-        
+
         // INFORMACION DEL DEAL
         // OBTIENE LA INFORMACION DE LA NEGOCIACION
         $detailsDeal = $this->bitrixSite.'/rest/117/'.$this->bitrixToken.'/crm.deal.get?ID='.$id;
@@ -230,7 +235,7 @@ class GuardarRespuestaController extends Controller
         ->exists();
 
         if ($validarNegociacion) {
-            
+
             // SI EXISTE EL REGISTRO, SE HACE LA CONSULTA Y SE DEVUELVE EL ID DEL REGISTRO
             $validarNegociacion = Negociaciones::where('id_negociacion', $id)
             ->first();
@@ -255,34 +260,39 @@ class GuardarRespuestaController extends Controller
             $idNegociacion = $negociaciones->id;
         }
 
-        $pregunta_id = 0;
+        $pregunta_id = 0; // VARIABLE QUE GUARDA EL ID DE A PREGUNTA
+        $data = $request->all(); // VARIABLE QUE GUARDA LOS DATOS DEL REQUEST
+        $i = 0; // VARIABLE PARA ITERAR
         // SE ITERA EL REQUEST PARA GUARDAR LAS PREGUNTAS
-        foreach($request->all() as $key => $value) {
+        foreach($data as $key => $value) {
             $id = strstr($key, 'id');
-
+            $comentarios = strstr($key, 'comentarios_multiple');
             // SI EL INDICE ES IGUAL A ID Y DISTINTO A ID_NEGOCIACION
             // SE GUARDA EL VALOR DEL ID DE LA PREGUNTA
             if ($key == $id && $key != 'id_negociacion' && $key != 'id_encuesta') {
-                
+
                 $pregunta_id = $value;
             }
 
-            if ($key != '_token' && $key != 'id_negociacion' && $key != 'id_encuesta' && $key != $id) {
+            if ($key != '_token' && $key != 'id_negociacion' && $key != 'id_encuesta' && $key != $id && $key != $comentarios) {
 
+                $i++; // Se incrementa el valor cada vez que entra a la condicion
                 // CONSULTA PARA VALIDAR SI EL REGISTRO EXISTE
                 $validarRespuesta = Respuestas::where('pregunta_id', '=', $pregunta_id)
                 ->where('negociacion_id', '=', $idNegociacion)
                 ->exists();
 
+                // Valida que la variable comentarios_multiple este seteada, y guarda el valor correspondiente.
+                (isset($data['comentarios_multiple'.$i]) ? $comentario = $data['comentarios_multiple'.$i] : $comentario = '');
                 if ($validarRespuesta) {
 
                     // SI LA PREGUNTA YA FUE CONTESTADA, NO SE INSERTA LA RESPUESTA
                     return '<h1>Esta encuesta ya fue contestada anteriormente</h1>';
                 } else {
-                
+
                     // SI LA PREGUNTA NO HA SIDO RESPONDIDA, SE INSERTA EL REGISTRO
                     DB::table('respuestas')->insert([
-                        ['respuesta' => $value, 'pregunta_id' => $pregunta_id, 'negociacion_id' => $idNegociacion],
+                        ['respuesta' => $value, 'comentarios_multiple' => $comentario, 'pregunta_id' => $pregunta_id, 'negociacion_id' => $idNegociacion],
                     ]);
 
                     // VALIDAMOS SI LA ENCUESTA YA FUE ENVIADA
@@ -290,7 +300,7 @@ class GuardarRespuestaController extends Controller
                     ->where("encuesta_id", $request->id_encuesta)
                     ->where("estatus_respuesta", "=", "CONTESTADO")
                     ->exists();
-                    
+
                     if (!$validarEnvio) {
 
                         // SI LA ENCUESTA NO HA SIDO ENVIADA AL CLIENTE, SE INSERTAN LOS DATOS DE ENVIO
@@ -304,7 +314,6 @@ class GuardarRespuestaController extends Controller
                 }
             }
         }
-        
         return "<h1>Gracias por tu tiempo</h1>";
     }
 

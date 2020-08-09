@@ -47,7 +47,7 @@ class CrearPreguntaController extends Controller
         // SI NO EXISTEN REGISTROS, SE ASIGNA 1 EN EL NUMERO DE PREGUNTA
         // SI EXISTEN REGISTROS, SE TOMA EL NUMERO DE LA PREGUNTA GUARDADO Y SE LE SUMA 1
         if (!$pregunta) {
-            
+
             $crearPregunta->numero = 1;
         } else {
 
@@ -59,6 +59,7 @@ class CrearPreguntaController extends Controller
         $crearPregunta->multiple = $request->multiple;
         $crearPregunta->medicion_id = $request->medicion;
         $crearPregunta->encuesta_id = $request->encuesta_id;
+        $crearPregunta->comentarios_multiple = $request->comentarios_multiple;
 
         // GUARDAMOS EN LA BASE DE DATOS
         $crearPregunta->save();

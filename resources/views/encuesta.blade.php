@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+	<link rel="icon" type="image/x-icon" href="https://idex.cc/notificaciones_muro_crm/image/idex_icon.ico">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
@@ -33,9 +33,9 @@
                     @break
                 @case(4)
                     <p>Te invito a responder estas breves preguntas respecto al asesor de ventas que te atendió.</p>
-                    @break                    
+                    @break
                 @default
-                    
+
             @endswitch
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -139,7 +139,7 @@
                                     @endphp
                                     @break
                                 @default
-                                    
+
                             @endswitch
                         @endif
                     @endforeach
@@ -151,7 +151,7 @@
                     <h4>{{$mensajeAsesor}}</h4>
                     @foreach ($informacionPreguntas as $i => $valueI)
                         @foreach ($informacionPreguntas[$i] as $j => $value)
-                        
+
                             @if ($j == 'nombre')
                                 @if ($value == "ASESOR")
                                     <div class="form-group">
@@ -160,10 +160,10 @@
                                                 {{ $numPreg++.".- ".$informacionPreguntas[$i]["descripcion"]}}
                                             </strong>
                                         </label>
-            
-                                        <!-- VALID SI ES OPCION MULTIPLE -->
-                                        
-                                        @if ($informacionPreguntas[$i]["multiple"] == 1)
+
+                                        <!-- MUESTRA OPCIONES DE RESPUESTA A LAS PREGUNTAS -->
+                                        <!-- OPCION MULTIPLE: 1 -> VARIAS OPCIONES, 2 -> SI / NO, 0 -> SOLO COMENTARIOS -->
+                                        @if ($informacionPreguntas[$i]["multiple"] == 2)
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
@@ -174,13 +174,43 @@
                                                     <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="No">
                                                     <label class="form-check-label" for="inlineRadio2">No</label>
                                                 </div>
+                                                @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                    <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                @endif
                                             </div>
+                                        @else
+                                            @if ($informacionPreguntas[$i]["multiple"] == 0)
+                                                {{$informacionPreguntas[$i]['nombre']}}
+                                                <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
+                                            @else
+                                                @if ($informacionPreguntas[$i]["multiple"] == 1)
+                                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                    <div class="custom-control custom-radio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Muy buena">
+                                                            <label class="form-check-label" for="inlineRadio1">Muy buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="Buena">
+                                                            <label class="form-check-label" for="inlineRadio2">Buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="Regular">
+                                                            <label class="form-check-label" for="inlineRadio3">Regular</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio4" value="Muy mala">
+                                                            <label class="form-check-label" for="inlineRadio4">Muy Mala</label>
+                                                        </div>
+                                                        @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                            <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
                                         @endif
-                                        @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                            {{$informacionPreguntas[$i]['nombre']}}
-                                            <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
-                                            <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
-                                        @endif
+
                                     </div>
                                 @endif
                             @endif
@@ -200,10 +230,10 @@
                                                 {{ $numPreg++.".- ".$informacionPreguntas[$i]["descripcion"]}}
                                             </strong>
                                         </label>
-            
-                                        <!-- VALID SI ES OPCION MULTIPLE -->
-                                        
-                                        @if ($informacionPreguntas[$i]["multiple"] == 1)
+
+                                        <!-- MUESTRA OPCIONES DE RESPUESTA A LAS PREGUNTAS -->
+                                        <!-- OPCION MULTIPLE: 1 -> VARIAS OPCIONES, 2 -> SI / NO, 0 -> SOLO COMENTARIOS -->
+                                        @if ($informacionPreguntas[$i]["multiple"] == 2)
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
@@ -214,12 +244,43 @@
                                                     <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="No">
                                                     <label class="form-check-label" for="inlineRadio2">No</label>
                                                 </div>
+                                                @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                    <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                @endif
                                             </div>
+                                        @else
+                                            @if ($informacionPreguntas[$i]["multiple"] == 0)
+                                                {{$informacionPreguntas[$i]['nombre']}}
+                                                <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
+                                            @else
+                                                @if ($informacionPreguntas[$i]["multiple"] == 1)
+                                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                    <div class="custom-control custom-radio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Muy buena">
+                                                            <label class="form-check-label" for="inlineRadio1">Muy buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="Buena">
+                                                            <label class="form-check-label" for="inlineRadio2">Buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="Regular">
+                                                            <label class="form-check-label" for="inlineRadio3">Regular</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio4" value="Muy mala">
+                                                            <label class="form-check-label" for="inlineRadio4">Muy Mala</label>
+                                                        </div>
+                                                        @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                            <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
                                         @endif
-                                        @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                            <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
-                                            <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
-                                        @endif
+
                                     </div>
                                 @endif
                             @endif
@@ -240,10 +301,10 @@
                                                 {{ $numPreg++.".- ".$informacionPreguntas[$i]["descripcion"]}}
                                             </strong>
                                         </label>
-            
-                                        <!-- VALID SI ES OPCION MULTIPLE -->
-                                        
-                                        @if ($informacionPreguntas[$i]["multiple"] == 1)
+
+                                        <!-- MUESTRA OPCIONES DE RESPUESTA A LAS PREGUNTAS -->
+                                        <!-- OPCION MULTIPLE: 1 -> VARIAS OPCIONES, 2 -> SI / NO, 0 -> SOLO COMENTARIOS -->
+                                        @if ($informacionPreguntas[$i]["multiple"] == 2)
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
@@ -254,13 +315,43 @@
                                                     <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="No">
                                                     <label class="form-check-label" for="inlineRadio2">No</label>
                                                 </div>
+                                                @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                    <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                @endif
                                             </div>
+                                        @else
+                                            @if ($informacionPreguntas[$i]["multiple"] == 0)
+                                                {{$informacionPreguntas[$i]['nombre']}}
+                                                <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
+                                            @else
+                                                @if ($informacionPreguntas[$i]["multiple"] == 1)
+                                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                    <div class="custom-control custom-radio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Muy buena">
+                                                            <label class="form-check-label" for="inlineRadio1">Muy buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="Buena">
+                                                            <label class="form-check-label" for="inlineRadio2">Buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="Regular">
+                                                            <label class="form-check-label" for="inlineRadio3">Regular</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio4" value="Muy mala">
+                                                            <label class="form-check-label" for="inlineRadio4">Muy Mala</label>
+                                                        </div>
+                                                        @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                            <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
                                         @endif
-                                        @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                            {{$informacionPreguntas[$i]['nombre']}}
-                                            <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
-                                            <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
-                                        @endif
+
                                     </div>
                                 @endif
                             @endif
@@ -280,10 +371,10 @@
                                                 {{ $numPreg++.".- ".$informacionPreguntas[$i]["descripcion"]}}
                                             </strong>
                                         </label>
-            
-                                        <!-- VALID SI ES OPCION MULTIPLE -->
-                                        
-                                        @if ($informacionPreguntas[$i]["multiple"] == 1)
+
+                                        <!-- MUESTRA OPCIONES DE RESPUESTA A LAS PREGUNTAS -->
+                                        <!-- OPCION MULTIPLE: 1 -> VARIAS OPCIONES, 2 -> SI / NO, 0 -> SOLO COMENTARIOS -->
+                                        @if ($informacionPreguntas[$i]["multiple"] == 2)
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
@@ -294,13 +385,43 @@
                                                     <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="No">
                                                     <label class="form-check-label" for="inlineRadio2">No</label>
                                                 </div>
+                                                @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                    <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                @endif
                                             </div>
+                                        @else
+                                            @if ($informacionPreguntas[$i]["multiple"] == 0)
+                                                {{$informacionPreguntas[$i]['nombre']}}
+                                                <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
+                                            @else
+                                                @if ($informacionPreguntas[$i]["multiple"] == 1)
+                                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                    <div class="custom-control custom-radio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Muy buena">
+                                                            <label class="form-check-label" for="inlineRadio1">Muy buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="Buena">
+                                                            <label class="form-check-label" for="inlineRadio2">Buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="Regular">
+                                                            <label class="form-check-label" for="inlineRadio3">Regular</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio4" value="Muy mala">
+                                                            <label class="form-check-label" for="inlineRadio4">Muy Mala</label>
+                                                        </div>
+                                                        @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                            <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
                                         @endif
-                                        @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                            {{$informacionPreguntas[$i]['nombre']}}
-                                            <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
-                                            <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
-                                        @endif
+
                                     </div>
                                 @endif
                             @endif
@@ -320,10 +441,10 @@
                                                 {{ $numPreg++.".- ".$informacionPreguntas[$i]["descripcion"]}}
                                             </strong>
                                         </label>
-            
-                                        <!-- VALID SI ES OPCION MULTIPLE -->
-                                        
-                                        @if ($informacionPreguntas[$i]["multiple"] == 1)
+
+                                        <!-- MUESTRA OPCIONES DE RESPUESTA A LAS PREGUNTAS -->
+                                        <!-- OPCION MULTIPLE: 1 -> VARIAS OPCIONES, 2 -> SI / NO, 0 -> SOLO COMENTARIOS -->
+                                        @if ($informacionPreguntas[$i]["multiple"] == 2)
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
@@ -334,13 +455,43 @@
                                                     <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="No">
                                                     <label class="form-check-label" for="inlineRadio2">No</label>
                                                 </div>
+                                                @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                    <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                @endif
                                             </div>
+                                        @else
+                                            @if ($informacionPreguntas[$i]["multiple"] == 0)
+                                                {{$informacionPreguntas[$i]['nombre']}}
+                                                <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
+                                            @else
+                                                @if ($informacionPreguntas[$i]["multiple"] == 1)
+                                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                    <div class="custom-control custom-radio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Muy buena">
+                                                            <label class="form-check-label" for="inlineRadio1">Muy buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="Buena">
+                                                            <label class="form-check-label" for="inlineRadio2">Buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="Regular">
+                                                            <label class="form-check-label" for="inlineRadio3">Regular</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio4" value="Muy mala">
+                                                            <label class="form-check-label" for="inlineRadio4">Muy Mala</label>
+                                                        </div>
+                                                        @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                            <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
                                         @endif
-                                        @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                            {{$informacionPreguntas[$i]['nombre']}}
-                                            <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
-                                            <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
-                                        @endif
+
                                     </div>
                                 @endif
                             @endif
@@ -360,10 +511,10 @@
                                                 {{ $numPreg++.".- ".$informacionPreguntas[$i]["descripcion"]}}
                                             </strong>
                                         </label>
-            
-                                        <!-- VALID SI ES OPCION MULTIPLE -->
-                                        
-                                        @if ($informacionPreguntas[$i]["multiple"] == 1)
+
+                                        <!-- MUESTRA OPCIONES DE RESPUESTA A LAS PREGUNTAS -->
+                                        <!-- OPCION MULTIPLE: 1 -> VARIAS OPCIONES, 2 -> SI / NO, 0 -> SOLO COMENTARIOS -->
+                                        @if ($informacionPreguntas[$i]["multiple"] == 2)
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
@@ -374,13 +525,43 @@
                                                     <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="No">
                                                     <label class="form-check-label" for="inlineRadio2">No</label>
                                                 </div>
+                                                @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                    <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                @endif
                                             </div>
+                                        @else
+                                            @if ($informacionPreguntas[$i]["multiple"] == 0)
+                                                {{$informacionPreguntas[$i]['nombre']}}
+                                                <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
+                                            @else
+                                                @if ($informacionPreguntas[$i]["multiple"] == 1)
+                                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                    <div class="custom-control custom-radio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Muy buena">
+                                                            <label class="form-check-label" for="inlineRadio1">Muy buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="Buena">
+                                                            <label class="form-check-label" for="inlineRadio2">Buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="Regular">
+                                                            <label class="form-check-label" for="inlineRadio3">Regular</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio4" value="Muy mala">
+                                                            <label class="form-check-label" for="inlineRadio4">Muy Mala</label>
+                                                        </div>
+                                                        @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                            <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
                                         @endif
-                                        @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                            {{$informacionPreguntas[$i]['nombre']}}
-                                            <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
-                                            <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
-                                        @endif
+
                                     </div>
                                 @endif
                             @endif
@@ -400,10 +581,10 @@
                                                 {{ $numPreg++.".- ".$informacionPreguntas[$i]["descripcion"]}}
                                             </strong>
                                         </label>
-            
-                                        <!-- VALID SI ES OPCION MULTIPLE -->
-                                        
-                                        @if ($informacionPreguntas[$i]["multiple"] == 1)
+
+                                        <!-- MUESTRA OPCIONES DE RESPUESTA A LAS PREGUNTAS -->
+                                        <!-- OPCION MULTIPLE: 1 -> VARIAS OPCIONES, 2 -> SI / NO, 0 -> SOLO COMENTARIOS -->
+                                        @if ($informacionPreguntas[$i]["multiple"] == 2)
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
@@ -414,13 +595,43 @@
                                                     <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="No">
                                                     <label class="form-check-label" for="inlineRadio2">No</label>
                                                 </div>
+                                                @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                    <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                @endif
                                             </div>
+                                        @else
+                                            @if ($informacionPreguntas[$i]["multiple"] == 0)
+                                                {{$informacionPreguntas[$i]['nombre']}}
+                                                <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
+                                            @else
+                                                @if ($informacionPreguntas[$i]["multiple"] == 1)
+                                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                    <div class="custom-control custom-radio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Muy buena">
+                                                            <label class="form-check-label" for="inlineRadio1">Muy buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="Buena">
+                                                            <label class="form-check-label" for="inlineRadio2">Buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="Regular">
+                                                            <label class="form-check-label" for="inlineRadio3">Regular</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio4" value="Muy mala">
+                                                            <label class="form-check-label" for="inlineRadio4">Muy Mala</label>
+                                                        </div>
+                                                        @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                            <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
                                         @endif
-                                        @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                            {{$informacionPreguntas[$i]['nombre']}}
-                                            <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
-                                            <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
-                                        @endif
+
                                     </div>
                                 @endif
                             @endif
@@ -440,10 +651,10 @@
                                                 {{ $numPreg++.".- ".$informacionPreguntas[$i]["descripcion"]}}
                                             </strong>
                                         </label>
-            
-                                        <!-- VALID SI ES OPCION MULTIPLE -->
-                                        
-                                        @if ($informacionPreguntas[$i]["multiple"] == 1)
+
+                                        <!-- MUESTRA OPCIONES DE RESPUESTA A LAS PREGUNTAS -->
+                                        <!-- OPCION MULTIPLE: 1 -> VARIAS OPCIONES, 2 -> SI / NO, 0 -> SOLO COMENTARIOS -->
+                                        @if ($informacionPreguntas[$i]["multiple"] == 2)
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
@@ -454,13 +665,43 @@
                                                     <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="No">
                                                     <label class="form-check-label" for="inlineRadio2">No</label>
                                                 </div>
+                                                @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                    <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                @endif
                                             </div>
+                                        @else
+                                            @if ($informacionPreguntas[$i]["multiple"] == 0)
+                                                {{$informacionPreguntas[$i]['nombre']}}
+                                                <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
+                                            @else
+                                                @if ($informacionPreguntas[$i]["multiple"] == 1)
+                                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                    <div class="custom-control custom-radio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Muy buena">
+                                                            <label class="form-check-label" for="inlineRadio1">Muy buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="Buena">
+                                                            <label class="form-check-label" for="inlineRadio2">Buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="Regular">
+                                                            <label class="form-check-label" for="inlineRadio3">Regular</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio4" value="Muy mala">
+                                                            <label class="form-check-label" for="inlineRadio4">Muy Mala</label>
+                                                        </div>
+                                                        @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                            <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
                                         @endif
-                                        @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                            {{$informacionPreguntas[$i]['nombre']}}
-                                            <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
-                                            <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
-                                        @endif
+
                                     </div>
                                 @endif
                             @endif
@@ -480,10 +721,10 @@
                                                 {{ $numPreg++.".- ".$informacionPreguntas[$i]["descripcion"]}}
                                             </strong>
                                         </label>
-            
-                                        <!-- VALID SI ES OPCION MULTIPLE -->
-                                        
-                                        @if ($informacionPreguntas[$i]["multiple"] == 1)
+
+                                        <!-- MUESTRA OPCIONES DE RESPUESTA A LAS PREGUNTAS -->
+                                        <!-- OPCION MULTIPLE: 1 -> VARIAS OPCIONES, 2 -> SI / NO, 0 -> SOLO COMENTARIOS -->
+                                        @if ($informacionPreguntas[$i]["multiple"] == 2)
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
@@ -494,13 +735,43 @@
                                                     <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="No">
                                                     <label class="form-check-label" for="inlineRadio2">No</label>
                                                 </div>
+                                                @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                    <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                @endif
                                             </div>
+                                        @else
+                                            @if ($informacionPreguntas[$i]["multiple"] == 0)
+                                                {{$informacionPreguntas[$i]['nombre']}}
+                                                <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
+                                            @else
+                                                @if ($informacionPreguntas[$i]["multiple"] == 1)
+                                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                    <div class="custom-control custom-radio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Muy buena">
+                                                            <label class="form-check-label" for="inlineRadio1">Muy buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="Buena">
+                                                            <label class="form-check-label" for="inlineRadio2">Buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="Regular">
+                                                            <label class="form-check-label" for="inlineRadio3">Regular</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio4" value="Muy mala">
+                                                            <label class="form-check-label" for="inlineRadio4">Muy Mala</label>
+                                                        </div>
+                                                        @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                            <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
                                         @endif
-                                        @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                            {{$informacionPreguntas[$i]['nombre']}}
-                                            <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
-                                            <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
-                                        @endif
+
                                     </div>
                                 @endif
                             @endif
@@ -520,10 +791,10 @@
                                                 {{ $numPreg++.".- ".$informacionPreguntas[$i]["descripcion"]}}
                                             </strong>
                                         </label>
-            
-                                        <!-- VALID SI ES OPCION MULTIPLE -->
-                                        
-                                        @if ($informacionPreguntas[$i]["multiple"] == 1)
+
+                                        <!-- MUESTRA OPCIONES DE RESPUESTA A LAS PREGUNTAS -->
+                                        <!-- OPCION MULTIPLE: 1 -> VARIAS OPCIONES, 2 -> SI / NO, 0 -> SOLO COMENTARIOS -->
+                                        @if ($informacionPreguntas[$i]["multiple"] == 2)
                                             <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
                                             <div class="custom-control custom-radio">
                                                 <div class="form-check form-check-inline">
@@ -534,13 +805,43 @@
                                                     <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="No">
                                                     <label class="form-check-label" for="inlineRadio2">No</label>
                                                 </div>
+                                                @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                    <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                @endif
                                             </div>
+                                        @else
+                                            @if ($informacionPreguntas[$i]["multiple"] == 0)
+                                                {{$informacionPreguntas[$i]['nombre']}}
+                                                <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
+                                            @else
+                                                @if ($informacionPreguntas[$i]["multiple"] == 1)
+                                                    <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
+                                                    <div class="custom-control custom-radio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio1" checked value="Muy buena">
+                                                            <label class="form-check-label" for="inlineRadio1">Muy buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio2" value="Buena">
+                                                            <label class="form-check-label" for="inlineRadio2">Buena</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio3" value="Regular">
+                                                            <label class="form-check-label" for="inlineRadio3">Regular</label>
+                                                        </div><br>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" name="respuesta_multiple{{ $informacionPreguntas[$i]['numero'] }}" id="inlineRadio4" value="Muy mala">
+                                                            <label class="form-check-label" for="inlineRadio4">Muy Mala</label>
+                                                        </div>
+                                                        @if ($informacionPreguntas[$i]["comentarios_multiple"] == 1)
+                                                            <input type="text" class="form-control" id="comentarios_multiple" name="comentarios_multiple{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Comentarios adicionales">
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
                                         @endif
-                                        @if ($informacionPreguntas[$i]["multiple"] == 0)
-                                            {{$informacionPreguntas[$i]['nombre']}}
-                                            <input type="text" class="form-control" id="respuesta" name="id{{ $informacionPreguntas[$i]['numero'] }}" value="{{ $informacionPreguntas[$i]['id'] }}" readonly style="display: none">
-                                            <input type="text" class="form-control" id="respuesta" name="respuesta{{ $informacionPreguntas[$i]['numero'] }}" placeholder="Escribe tu respuesta">
-                                        @endif
+
                                     </div>
                                 @endif
                             @endif
@@ -576,9 +877,9 @@
 		                <table align="left" border="0" cellpadding="0" cellspacing="0" style="max-width:100%; min-width:100%;" width="100%" class="mcnTextContentContainer">
 		                    <tbody>
 		                    	<tr>
-		                        
+
 			                        <td valign="top" class="mcnTextContent" style="padding-top:0; padding-right:18px; padding-bottom:9px; padding-left:18px;">
-			                        
+
 										<em>Copyright © <?php echo date("Y");?> IDEX, All rights reserved.</em>
 			                        </td>
 		                    	</tr>
