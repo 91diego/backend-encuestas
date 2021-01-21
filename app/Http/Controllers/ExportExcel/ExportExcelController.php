@@ -24,14 +24,14 @@ class ExportExcelController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {    
+    {
         $data = DB::table('negociaciones')
         ->leftJoin('respuestas', 'respuestas.negociacion_id', '=', 'negociaciones.id')
         ->rightJoin('envio_encuestas', 'envio_encuestas.negociacion_id', '=', 'negociaciones.id_negociacion')
         ->rightJoin('encuestas', 'encuestas.id', '=', 'envio_encuestas.encuesta_id')
         ->rightJoin('fases', 'fases.id', '=', 'encuestas.fase_id')
         ->leftJoin('preguntas', 'preguntas.id', '=', 'respuestas.pregunta_id')
-        ->select('encuestas.nombre as Encuesta', 'fases.nombre as Fase', 'negociaciones.id_negociacion', 
+        ->select('encuestas.nombre as Encuesta', 'fases.nombre as Fase', 'negociaciones.id_negociacion',
         'negociaciones.cliente', 'negociaciones.desarrollo', 'negociaciones.responsable',
         'negociaciones.puesto_responsable', 'negociaciones.departamento_responsable',
         'negociaciones.gerente_responsable', 'negociaciones.origen', 'negociaciones.canal_ventas',

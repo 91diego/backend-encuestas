@@ -117,12 +117,13 @@ class EncuestaController extends Controller
      * RETORNA LA VISTA DE LA ENCUESTA
      * TAMBIEN TRAE DATOS DEL CRM
      *
-     * @param string  $nombre
-     * @param string $fase
-     * @param int id
+     * @param string nombre de la encuesta
+     * @param string fase de la encuesta
+     * @param int id del cliente
+     * @param string cliente nombre del cliente
      * @return \Illuminate\Http\Response
      */
-    public function encuesta($nombre, $fase, $id)
+    public function encuesta($nombre, $fase, $id, $cliente)
     {
 
         // ALMACENA LOS DATOS QUE SE PASARAN A LA VISTA
@@ -148,6 +149,7 @@ class EncuestaController extends Controller
         $data = [
 
             "id_negociacion" => $id,
+            "nombre_cliente" => $cliente,
             "encuesta" => $nombre,
             "fase" => $fase,
             "id_encuesta" => $encuestaId[0]["id"]
