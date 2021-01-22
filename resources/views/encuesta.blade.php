@@ -16,10 +16,12 @@
     	<img class="float-lg-left" alt="" src="https://mcusercontent.com/3ec4abd994abed22a4c543d03/images/e1651d54-fff1-442c-98ac-94b0902675b8.png" width="174.83998107910156" width="564" style="max-width:2509px;">
     	<br>
         <br>
-        <h1 class="text-center">{{ ucfirst($data["encuesta"]) }}</h1>
+        <h1 class="text-center"> {{ ucfirst($data["encuesta"]) }}</h1>
         <br>
         <div class="shadow-lg p-4 mb-4 bg-white rounded-lg">
-        	<p><strong>¡Hola! {{ ucfirst($data["nombre_cliente"]) }} .</strong> Tu opinión es muy importante para nosotros ya que de esta manera podremos ofrecerte la atención y servicio que mereces.</p>
+        	<p><strong>¡Hola @isset($data["nombre_cliente"])
+                {{ ucfirst($data["nombre_cliente"]) }}
+            @endisset!.</strong> Tu opinión es muy importante para nosotros ya que de esta manera podremos ofrecerte la atención y servicio que mereces.</p>
             @switch($data["fase"])
                 @case(1)
                     <p>Te invito a responder estas breves preguntas respecto al asesor de ventas que te atendió.</p>

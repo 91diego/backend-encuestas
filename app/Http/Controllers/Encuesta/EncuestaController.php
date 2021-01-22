@@ -9,14 +9,10 @@
 
 namespace App\Http\Controllers\Encuesta;
 
+use App\Encuestas;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\DB;
-use App\Fases;
-use App\Encuestas;
-use App\EnvioEncuestas;
-use App\Negociaciones;
 
 class EncuestaController extends Controller
 {
@@ -26,7 +22,7 @@ class EncuestaController extends Controller
 
     public function __construct()
     {
-        $this->bitrixSite=env('BITRIX_SITE', '');
+        $this->bitrixSite = env('BITRIX_SITE', '');
         $this->bitrixToken = env('BITRIX_TOKEN', '');
     }
     /**
@@ -38,8 +34,8 @@ class EncuestaController extends Controller
     {
         // MUESTRA EL LISTADO DE LAS ENCUESTAS
         $encuestas = Encuestas::join('fases', 'encuestas.fase_id', '=', 'fases.id')
-        ->select('encuestas.id', 'encuestas.nombre as encuesta', 'encuestas.desarrollo', 'fases.nombre as fase')
-        ->get();
+            ->select('encuestas.id', 'encuestas.nombre as encuesta', 'encuestas.desarrollo', 'fases.nombre as fase')
+            ->get();
         return $encuestas;
     }
 
@@ -73,9 +69,9 @@ class EncuestaController extends Controller
     public function show($id)
     {
         $encuesta = Encuestas::join('fases', 'fases.id', '=', 'encuestas.fase_id')
-        ->select('encuestas.nombre as encuesta', 'encuestas.desarrollo',
-        'fases.nombre as fase', 'fases.id as idFase')
-        ->find($id);
+            ->select('encuestas.nombre as encuesta', 'encuestas.desarrollo',
+                'fases.nombre as fase', 'fases.id as idFase')
+            ->find($id);
         return $encuesta;
     }
 
@@ -123,28 +119,37 @@ class EncuestaController extends Controller
      * @param string cliente nombre del cliente
      * @return \Illuminate\Http\Response
      */
-    public function encuesta($nombre, $fase, $id, $cliente)
+    public function encuesta($nombre, $fase, $id, $cliente = "")
     {
+        // OBTIENE LA INFORMACION DE LA NEGOCIACION
+        $detailsDeal = $this->bitrixSite . '/rest/117/' . $this->bitrixToken . '/crm.deal.get?ID=' . $id;
 
+        // OBTIENE LA RESPUESTA DE LA API REST BITRIX
+        $responseAPI = file_get_contents($detailsDeal);
+
+        // CAMPOS DE LA RESPUESTA
+        $deal = json_decode($responseAPI, true);
+        $dealName = explode(":", $deal["result"]["TITLE"]);
+        $cliente = $dealName[1];
         // ALMACENA LOS DATOS QUE SE PASARAN A LA VISTA
         $data = [];
 
         $preguntas = DB::table('encuestas')
-        ->join('preguntas', 'preguntas.encuesta_id', '=', 'encuestas.id')
-        ->join('mediciones', 'mediciones.id', '=', 'preguntas.medicion_id')
-        ->where('encuestas.nombre', 'LIKE', '%'. $nombre . '%')
-        ->where('encuestas.fase_id', '=', $fase)
-        ->select('preguntas.id', 'preguntas.numero', 'preguntas.descripcion',
-        'preguntas.multiple', 'preguntas.comentarios_multiple', 'mediciones.nombre')
-        ->get();
+            ->join('preguntas', 'preguntas.encuesta_id', '=', 'encuestas.id')
+            ->join('mediciones', 'mediciones.id', '=', 'preguntas.medicion_id')
+            ->where('encuestas.nombre', 'LIKE', '%' . $nombre . '%')
+            ->where('encuestas.fase_id', '=', $fase)
+            ->select('preguntas.id', 'preguntas.numero', 'preguntas.descripcion',
+                'preguntas.multiple', 'preguntas.comentarios_multiple', 'mediciones.nombre')
+            ->get();
 
         $informacionPreguntas = json_decode($preguntas, 1);
 
         $encuesta = DB::table('encuestas')
-        ->where('encuestas.nombre', 'LIKE', '%'. $nombre . '%')
-        ->where('encuestas.fase_id', '=', $fase)
-        ->select('encuestas.id')
-        ->get();
+            ->where('encuestas.nombre', 'LIKE', '%' . $nombre . '%')
+            ->where('encuestas.fase_id', '=', $fase)
+            ->select('encuestas.id')
+            ->get();
         $encuestaId = json_decode($encuesta, 1);
         $data = [
 
@@ -152,7 +157,7 @@ class EncuestaController extends Controller
             "nombre_cliente" => $cliente,
             "encuesta" => $nombre,
             "fase" => $fase,
-            "id_encuesta" => $encuestaId[0]["id"]
+            "id_encuesta" => $encuestaId[0]["id"],
         ];
 
         $mensaje = [
